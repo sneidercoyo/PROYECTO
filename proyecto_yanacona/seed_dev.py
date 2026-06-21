@@ -45,13 +45,19 @@ else:
     ]:
         cats[slug] = Category.objects.create(name=name, slug=slug, description=desc)
 
+    # Cuenta de usuario para un artesano de ejemplo (rol artisan)
+    artesano_user = User(name="Luz Quinayás", email="artesano@onel.com", role="artisan",
+                         phone="3125557788", city="Puerto Caicedo", address="Vereda El Carmen")
+    artesano_user.set_password("artesano123")
+    artesano_user.save()
+
     artesanos = {}
-    for name, slug, spec, bio in [
-        ("Rosa Anacona", "rosa-anacona", "Cestería", "Maestra tejedora con 30 años de experiencia."),
-        ("Juan Jajoy", "juan-jajoy", "Cerámica", "Alfarero tradicional del pueblo Yanacona."),
-        ("Luz Quinayás", "luz-quinayas", "Tejidos", "Especialista en mochilas de lana virgen."),
+    for name, slug, spec, bio, linked_user in [
+        ("Rosa Anacona", "rosa-anacona", "Cestería", "Maestra tejedora con 30 años de experiencia.", None),
+        ("Juan Jajoy", "juan-jajoy", "Cerámica", "Alfarero tradicional del pueblo Yanacona.", None),
+        ("Luz Quinayás", "luz-quinayas", "Tejidos", "Especialista en mochilas de lana virgen.", artesano_user),
     ]:
-        artesanos[slug] = Artisan.objects.create(name=name, slug=slug, specialty=spec, bio=bio, active=True)
+        artesanos[slug] = Artisan.objects.create(name=name, slug=slug, specialty=spec, bio=bio, active=True, user=linked_user)
 
     productos = [
         ("Canasto Tradicional", "canasto-tradicional", 45000, 12, "cesteria", "rosa-anacona", True),
@@ -73,5 +79,6 @@ else:
                            phone="3001112233", message="¿Hacen envíos a Bogotá?")
 
     print("Seed completado.")
-    print("  Admin:   admin@onel.com / admin123")
-    print("  Cliente: cliente@onel.com / cliente123")
+    print("  Admin:    admin@onel.com / admin123")
+    print("  Cliente:  cliente@onel.com / cliente123")
+    print("  Artesano: artesano@onel.com / artesano123")

@@ -26,6 +26,10 @@ class Artisan(models.Model):
     specialty = models.CharField(max_length=100, verbose_name="Especialidad")
     image = models.ImageField(upload_to='artisans/', blank=True, verbose_name="Imagen")
     active = models.BooleanField(default=True, verbose_name="Activo")
+    user = models.ForeignKey(
+        'User', on_delete=models.SET_NULL, null=True, blank=True,
+        db_column='user_id', related_name='artisan_profile', verbose_name="Cuenta de usuario"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -70,6 +74,7 @@ class Product(models.Model):
 class User(models.Model):
     ROLE_CHOICES = [
         ('customer', 'Cliente'),
+        ('artisan', 'Artesano'),
         ('admin', 'Administrador'),
     ]
     name = models.CharField(max_length=150, verbose_name="Nombre")
@@ -107,6 +112,9 @@ class User(models.Model):
 
     def is_admin(self):
         return self.role == 'admin'
+
+    def is_artisan(self):
+        return self.role == 'artisan'
 
 
 class Order(models.Model):

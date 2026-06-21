@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
+from django.utils import timezone
+from django.utils.text import slugify
 from .models import Category, Artisan, Product, User, Order, OrderItem, Contact, CartItem
+from .decorators import admin_required, artisan_required
 
 
 def home(request):
@@ -95,6 +98,10 @@ def login_view(request):
                 request.session['user_name'] = user.name
                 request.session['user_role'] = user.role
                 messages.success(request, f"Bienvenido, {user.name}!")
+                if user.role == 'admin':
+                    return redirect('admin_dashboard')
+                if user.role == 'artisan':
+                    return redirect('artisan_dashboard')
                 return redirect('home')
             else:
                 messages.error(request, "Contraseña incorrecta.")
@@ -240,3 +247,362 @@ def checkout(request):
     return render(request, 'store/checkout.html', {
         'items': items, 'total': total, 'user': user
     })
+
+
+# =============================
+# UTILIDADES
+# =============================
+def _unique_slug(model, base, instance_id=None):
+    """Genera un slug único para el modelo dado."""
+    base = slugify(base) or 'item'
+    slug = base
+    counter = 2
+    qs = model.objects.all()
+    if instance_id:
+        qs = qs.exclude(id=instance_id)
+    while qs.filter(slug=slug).exists():
+        slug = f"{base}-{counter}"
+        counter += 1
+    return slug
+
+
+# =============================
+# PANEL DE ADMINISTRADOR
+# =============================
+@admin_required
+def admin_dashboard(request):
+    context = {
+        'total_users': User.objects.count(),
+        'total_products': Product.objects.count(),
+        'total_orders': Order.objects.count(),
+        'total_artisans': Artisan.objects.count(),
+        'recent_orders': Order.objects.order_by('-created_at')[:5],
+        'recent_users': User.objects.order_by('-created_at')[:5],
+    }
+    return render(request, 'store/admin_dashboard.html', context)
+
+
+@admin_required
+def admin_products(request):
+    products = Product.objects.all().select_related('category', 'artisan')
+    return render(request, 'store/admin_products.html', {'products': products})
+
+
+@admin_required
+def admin_add_product(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        slug = request.POST.get('slug') or name
+        category_id = request.POST.get('category') or None
+        artisan_id = request.POST.get('artisan') or None
+        Product.objects.create(
+            name=name,
+            slug=_unique_slug(Product, slug),
+            description=request.POST.get('description', ''),
+            price=request.POST.get('price') or 0,
+            stock=request.POST.get('stock') or 0,
+            category_id=category_id,
+            artisan_id=artisan_id,
+            featured='featured' in request.POST,
+            active='active' in request.POST,
+        )
+        messages.success(request, "Producto creado exitosamente.")
+        return redirect('admin_products')
+    return render(request, 'store/admin_add_product.html', {
+        'categories': Category.objects.all(),
+        'artisans': Artisan.objects.all(),
+    })
+
+
+@admin_required
+def admin_edit_product(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.description = request.POST.get('description', '')
+        product.price = request.POST.get('price') or 0
+        product.stock = request.POST.get('stock') or 0
+        product.category_id = request.POST.get('category') or None
+        product.artisan_id = request.POST.get('artisan') or None
+        product.featured = 'featured' in request.POST
+        product.active = 'active' in request.POST
+        product.save()
+        messages.success(request, "Producto actualizado.")
+        return redirect('admin_products')
+    return render(request, 'store/admin_edit_product.html', {
+        'product': product,
+        'categories': Category.objects.all(),
+        'artisans': Artisan.objects.all(),
+    })
+
+
+@admin_required
+def admin_artisans(request):
+    artisans = Artisan.objects.all()
+    return render(request, 'store/admin_artisans.html', {'artisans': artisans})
+
+
+@admin_required
+def admin_add_artisan(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        slug = request.POST.get('slug') or name
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        linked_user = None
+        # Si se proporcionan credenciales, se crea una cuenta de acceso de artesano.
+        if email and password:
+            if User.objects.filter(email=email).exists():
+                messages.error(request, "Ya existe un usuario con ese correo.")
+                return render(request, 'store/admin_add_artisan.html')
+            linked_user = User(
+                name=name, email=email, role='artisan',
+                phone=request.POST.get('phone', ''),
+            )
+            linked_user.set_password(password)
+            linked_user.save()
+
+        Artisan.objects.create(
+            name=name,
+            slug=_unique_slug(Artisan, slug),
+            bio=request.POST.get('bio', ''),
+            specialty=request.POST.get('specialty', ''),
+            active='active' in request.POST,
+            user=linked_user,
+        )
+        messages.success(request, "Artesano creado exitosamente.")
+        return redirect('admin_artisans')
+    return render(request, 'store/admin_add_artisan.html')
+
+
+@admin_required
+def admin_edit_artisan(request, artisan_id):
+    artisan = get_object_or_404(Artisan, id=artisan_id)
+    if request.method == 'POST':
+        artisan.name = request.POST.get('name')
+        artisan.bio = request.POST.get('bio', '')
+        artisan.specialty = request.POST.get('specialty', '')
+        artisan.active = 'active' in request.POST
+        artisan.save()
+        messages.success(request, "Artesano actualizado.")
+        return redirect('admin_artisans')
+    return render(request, 'store/admin_edit_artisan.html', {'artisan': artisan})
+
+
+@admin_required
+def admin_categories(request):
+    categories = Category.objects.all()
+    return render(request, 'store/admin_categories.html', {'categories': categories})
+
+
+@admin_required
+def admin_add_category(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        slug = request.POST.get('slug') or name
+        Category.objects.create(
+            name=name,
+            slug=_unique_slug(Category, slug),
+            description=request.POST.get('description', ''),
+        )
+        messages.success(request, "Categoría creada exitosamente.")
+        return redirect('admin_categories')
+    return render(request, 'store/admin_add_category.html')
+
+
+@admin_required
+def admin_edit_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    if request.method == 'POST':
+        category.name = request.POST.get('name')
+        category.description = request.POST.get('description', '')
+        category.save()
+        messages.success(request, "Categoría actualizada.")
+        return redirect('admin_categories')
+    return render(request, 'store/admin_edit_category.html', {'category': category})
+
+
+@admin_required
+def admin_orders(request):
+    orders = Order.objects.all().select_related('user')
+    status_filter = request.GET.get('status')
+    if status_filter:
+        orders = orders.filter(status=status_filter)
+    return render(request, 'store/admin_orders.html', {
+        'orders': orders, 'status_filter': status_filter,
+    })
+
+
+@admin_required
+def admin_order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status:
+            order.status = new_status
+            order.save()
+            messages.success(request, "Estado del pedido actualizado.")
+        return redirect('admin_order_detail', order_id=order.id)
+    items = OrderItem.objects.filter(order=order).select_related('product', 'product__artisan')
+    return render(request, 'store/admin_order_detail.html', {'order': order, 'items': items})
+
+
+@admin_required
+def admin_users(request):
+    users = User.objects.all()
+    return render(request, 'store/admin_users.html', {'users': users})
+
+
+@admin_required
+def admin_edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        user.name = request.POST.get('name')
+        user.email = request.POST.get('email')
+        user.phone = request.POST.get('phone', '')
+        user.address = request.POST.get('address', '')
+        user.city = request.POST.get('city', '')
+        user.role = request.POST.get('role', user.role)
+        user.active = 'active' in request.POST
+        user.save()
+        messages.success(request, "Usuario actualizado.")
+        return redirect('admin_users')
+    return render(request, 'store/admin_edit_user.html', {'user': user})
+
+
+@admin_required
+def admin_contacts(request):
+    contacts = Contact.objects.all()
+    return render(request, 'store/admin_contacts.html', {'contacts': contacts})
+
+
+@admin_required
+def admin_contact_detail(request, contact_id):
+    contact = get_object_or_404(Contact, id=contact_id)
+    if not contact.read_at:
+        contact.read_at = timezone.now()
+        contact.save()
+    return render(request, 'store/admin_contact_detail.html', {'contact': contact})
+
+
+# =============================
+# PANEL DE ARTESANO
+# =============================
+def _get_artisan(request):
+    """Devuelve el perfil de artesano vinculado al usuario en sesión."""
+    return Artisan.objects.filter(user_id=request.session.get('user_id')).first()
+
+
+def _artisan_order_ids(artisan):
+    return OrderItem.objects.filter(product__artisan=artisan).values_list('order_id', flat=True).distinct()
+
+
+@artisan_required
+def artisan_dashboard(request):
+    artisan = _get_artisan(request)
+    if not artisan:
+        messages.error(request, "Tu cuenta no tiene un perfil de artesano asociado. Contacta al administrador.")
+        return redirect('home')
+    products = Product.objects.filter(artisan=artisan).order_by('-created_at')
+    order_ids = _artisan_order_ids(artisan)
+    orders = Order.objects.filter(id__in=order_ids)
+    return render(request, 'store/artisan_dashboard.html', {
+        'artisan': artisan,
+        'products': products,
+        'total_products': products.count(),
+        'total_orders': orders.count(),
+        'pending_orders': orders.filter(status='pending').count(),
+    })
+
+
+@artisan_required
+def artisan_products(request):
+    artisan = _get_artisan(request)
+    if not artisan:
+        messages.error(request, "Tu cuenta no tiene un perfil de artesano asociado.")
+        return redirect('home')
+    products = Product.objects.filter(artisan=artisan).select_related('category')
+    return render(request, 'store/artisan_products.html', {'products': products})
+
+
+@artisan_required
+def artisan_add_product(request):
+    artisan = _get_artisan(request)
+    if not artisan:
+        messages.error(request, "Tu cuenta no tiene un perfil de artesano asociado.")
+        return redirect('home')
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        slug = request.POST.get('slug') or name
+        Product.objects.create(
+            name=name,
+            slug=_unique_slug(Product, slug),
+            description=request.POST.get('description', ''),
+            price=request.POST.get('price') or 0,
+            stock=request.POST.get('stock') or 0,
+            category_id=request.POST.get('category') or None,
+            artisan=artisan,
+            featured='featured' in request.POST,
+            active='active' in request.POST,
+        )
+        messages.success(request, "Producto creado exitosamente.")
+        return redirect('artisan_products')
+    return render(request, 'store/artisan_add_product.html', {
+        'categories': Category.objects.all(),
+    })
+
+
+@artisan_required
+def artisan_edit_product(request, product_id):
+    artisan = _get_artisan(request)
+    if not artisan:
+        messages.error(request, "Tu cuenta no tiene un perfil de artesano asociado.")
+        return redirect('home')
+    product = get_object_or_404(Product, id=product_id, artisan=artisan)
+    if request.method == 'POST':
+        product.name = request.POST.get('name')
+        product.description = request.POST.get('description', '')
+        product.price = request.POST.get('price') or 0
+        product.stock = request.POST.get('stock') or 0
+        product.category_id = request.POST.get('category') or None
+        product.featured = 'featured' in request.POST
+        product.active = 'active' in request.POST
+        product.save()
+        messages.success(request, "Producto actualizado.")
+        return redirect('artisan_products')
+    return render(request, 'store/artisan_edit_product.html', {
+        'product': product,
+        'categories': Category.objects.all(),
+    })
+
+
+@artisan_required
+def artisan_orders(request):
+    artisan = _get_artisan(request)
+    if not artisan:
+        messages.error(request, "Tu cuenta no tiene un perfil de artesano asociado.")
+        return redirect('home')
+    orders = Order.objects.filter(id__in=_artisan_order_ids(artisan)).select_related('user')
+    return render(request, 'store/artisan_orders.html', {'orders': orders})
+
+
+@artisan_required
+def artisan_order_detail(request, order_id):
+    artisan = _get_artisan(request)
+    if not artisan:
+        messages.error(request, "Tu cuenta no tiene un perfil de artesano asociado.")
+        return redirect('home')
+    order = get_object_or_404(Order, id=order_id)
+    items = OrderItem.objects.filter(order=order, product__artisan=artisan).select_related('product')
+    if not items.exists():
+        messages.error(request, "Este pedido no contiene productos tuyos.")
+        return redirect('artisan_orders')
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        if new_status:
+            order.status = new_status
+            order.save()
+            messages.success(request, "Estado del pedido actualizado.")
+        return redirect('artisan_order_detail', order_id=order.id)
+    return render(request, 'store/artisan_order_detail.html', {'order': order, 'items': items})

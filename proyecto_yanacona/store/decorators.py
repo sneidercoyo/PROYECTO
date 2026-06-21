@@ -26,3 +26,17 @@ def admin_required(view_func):
             return redirect('home')
         return view_func(request, *args, **kwargs)
     return wrapper
+
+
+def artisan_required(view_func):
+    """Decorador que requiere rol de artesano."""
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('user_id'):
+            messages.warning(request, 'Debes iniciar sesión.')
+            return redirect('login')
+        if request.session.get('user_role') != 'artisan':
+            messages.error(request, 'No tienes permisos de artesano.')
+            return redirect('home')
+        return view_func(request, *args, **kwargs)
+    return wrapper
