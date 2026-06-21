@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Editar Artesano — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-pencil"></i> Editar Artesano</h1>
+        <p class="page-subtitle-exact">{{ artisan.name }}</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:600px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre completo *</label>
+                        <input type="text" name="name" class="form-control-exact" value="{{ artisan.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Biografía</label>
+                        <textarea name="bio" class="form-control-exact" rows="4">{{ artisan.bio }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Especialidad</label>
+                        <input type="text" name="specialty" class="form-control-exact" value="{{ artisan.specialty }}">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                            <input type="checkbox" name="active" {% if artisan.active %}checked{% endif %} style="width:18px; height:18px;">
+                            <span style="font-size:0.85rem; font-weight:600;">Activo</span>
+                        </label>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
+                        <a href="{% url 'admin_artisans' %}" class="btn-outline-exact">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

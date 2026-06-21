@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Panel Administrador — O'NEL Artesanías{% endblock %}
+{% block content %}
+<section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-4), var(--color-rainbow-5));">
+    <div class="container-exact">
+        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-speedometer2"></i> Panel de Administrador</h1>
+        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Gestión completa de la tienda O'NEL</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row mb-4">
+            <div class="col-md-3 col-6 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-people" style="font-size:2rem; color:var(--color-rainbow-4);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_users }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.85rem;">Usuarios</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-box-seam" style="font-size:2rem; color:var(--color-rainbow-2);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_products }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.85rem;">Productos</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-bag-check" style="font-size:2rem; color:var(--color-rainbow-1);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_orders }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.85rem;">Pedidos</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-shop" style="font-size:2rem; color:var(--color-rainbow-3);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_artisans }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.85rem;">Artesanos</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                    <a href="{% url 'admin_add_product' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Producto</a>
+                    <a href="{% url 'admin_add_artisan' %}" class="btn-primary-exact" style="background:var(--color-rainbow-3);"><i class="bi bi-plus-lg"></i> Artesano</a>
+                    <a href="{% url 'admin_add_category' %}" class="btn-primary-exact" style="background:var(--color-rainbow-2);"><i class="bi bi-plus-lg"></i> Categoría</a>
+                    <a href="{% url 'admin_orders' %}" class="btn-outline-exact"><i class="bi bi-bag"></i> Pedidos</a>
+                    <a href="{% url 'admin_users' %}" class="btn-outline-exact"><i class="bi bi-people"></i> Usuarios</a>
+                    <a href="{% url 'admin_contacts' %}" class="btn-outline-exact"><i class="bi bi-envelope"></i> Mensajes</a>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h4 style="font-family:'Playfair Display', serif; font-weight:700;"><i class="bi bi-bag"></i> Pedidos Recientes</h4>
+                        <a href="{% url 'admin_orders' %}" style="color:var(--color-rainbow-4); font-size:0.85rem;">Ver todos</a>
+                    </div>
+                    {% if recent_orders %}
+                    <div class="table-responsive">
+                        <table class="table-exact">
+                            <thead><tr><th>#</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                <tr>
+                                    <td><strong>#{{ order.id }}</strong></td>
+                                    <td>{{ order.shipping_name|default:"Anónimo" }}</td>
+                                    <td>{{ order.total|format_price }}</td>
+                                    <td><span class="badge" style="background:{% if order.status == 'delivered' %}#28a745{% elif order.status == 'pending' %}#ffc107{% elif order.status == 'cancelled' %}#dc3545{% else %}#17a2b8{% endif %}; color:{% if order.status == 'pending' %}#333{% else %}white{% endif %}; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{{ order.get_status_display }}</span></td>
+                                    <td>{{ order.created_at|date:"d/m/Y" }}</td>
+                                    <td><a href="{% url 'admin_order_detail' order.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-eye"></i></a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}<p style="color:var(--color-text-light);">No hay pedidos recientes.</p>{% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h4 style="font-family:'Playfair Display', serif; font-weight:700;"><i class="bi bi-people"></i> Usuarios Recientes</h4>
+                        <a href="{% url 'admin_users' %}" style="color:var(--color-rainbow-4); font-size:0.85rem;">Ver todos</a>
+                    </div>
+                    {% if recent_users %}
+                    <div class="table-responsive">
+                        <table class="table-exact">
+                            <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th>Registro</th></tr></thead>
+                            <tbody>
+                                {% for u in recent_users %}
+                                <tr>
+                                    <td>{{ u.name }}</td>
+                                    <td>{{ u.email }}</td>
+                                    <td><span class="badge" style="background:{% if u.role == 'admin' %}var(--color-rainbow-4){% elif u.role == 'artisan' %}var(--color-rainbow-2){% else %}var(--color-rainbow-1){% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{% if u.role == 'admin' %}Admin{% elif u.role == 'artisan' %}Artesano{% else %}Cliente{% endif %}</span></td>
+                                    <td><span class="badge" style="background:{% if u.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{% if u.active %}Activo{% else %}Inactivo{% endif %}</span></td>
+                                    <td>{{ u.created_at|date:"d/m/Y" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}<p style="color:var(--color-text-light);">No hay usuarios recientes.</p>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

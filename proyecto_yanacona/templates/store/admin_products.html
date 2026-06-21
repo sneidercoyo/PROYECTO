@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Productos — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-box-seam"></i> Gestión de Productos</h1>
+        <p class="page-subtitle-exact">Todos los productos de la tienda</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="margin-bottom:1.5rem;">
+            <a href="{% url 'admin_add_product' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
+        </div>
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if products %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Artesano</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:0.75rem;">
+                                    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);">
+                                    {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
+                                    <span>{{ product.name }}</span>
+                                </div>
+                            </td>
+                            <td>{{ product.price|format_price }}</td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.category.name|default:"Sin categoría" }}</td>
+                            <td>{{ product.artisan.name|default:"Sin artesano" }}</td>
+                            <td><span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{% if product.active %}Activo{% else %}Inactivo{% endif %}</span></td>
+                            <td>{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
+                            <td><a href="{% url 'admin_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}<p style="color:var(--color-text-light);">No hay productos registrados.</p>{% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

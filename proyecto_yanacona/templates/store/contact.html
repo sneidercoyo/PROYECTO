@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contacto — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact">Contacto</h1>
+        <p class="page-subtitle-exact">Estamos aquí para ayudarte</p>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <h3 style="font-family:'Playfair Display', serif; font-size:1.3rem; font-weight:700; margin-bottom:1.5rem;">Envíanos un mensaje</h3>
+                    <form method="post" action="{% url 'contact' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--color-text);">Nombre</label>
+                            <input type="text" name="name" class="form-control-exact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--color-text);">Correo electrónico</label>
+                            <input type="email" name="email" class="form-control-exact" required>
+                        </div>
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--color-text);">Teléfono</label>
+                            <input type="text" name="phone" class="form-control-exact">
+                        </div>
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:var(--color-text);">Mensaje</label>
+                            <textarea name="message" class="form-control-exact" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary-exact" style="width:100%;">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="contact-info-exact">
+                    <h3 style="font-family:'Playfair Display', serif; font-size:1.3rem; font-weight:700; margin-bottom:1.5rem;">Información de contacto</h3>
+                    <p><i class="bi bi-geo-alt"></i> Puerto Caicedo, Putumayo, Colombia</p>
+                    <p><i class="bi bi-envelope"></i> info@onelartesanias.com</p>
+                    <p><i class="bi bi-telephone"></i> +57 310 123 4567</p>
+                    <p><i class="bi bi-clock"></i> Lunes a Viernes, 8:00 AM - 5:00 PM</p>
+                    <div class="social-icons-exact" style="margin-top:1.5rem;">
+                        <a href="#" class="social-icon-exact"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-icon-exact"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-icon-exact"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

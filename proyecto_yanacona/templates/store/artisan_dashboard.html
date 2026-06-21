@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Panel Artesano — O'NEL Artesanías{% endblock %}
+{% block content %}
+<section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-2), var(--color-rainbow-3));">
+    <div class="container-exact">
+        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-shop"></i> Panel de Artesano</h1>
+        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Gestiona tus productos y pedidos</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-box-seam" style="font-size:2rem; color:var(--color-rainbow-2);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_products }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Mis Productos</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-bag-check" style="font-size:2rem; color:var(--color-rainbow-4);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_orders }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Mis Pedidos</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
+                    <i class="bi bi-hourglass-split" style="font-size:2rem; color:var(--color-rainbow-1);"></i>
+                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ pending_orders }}</h3>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Pendientes</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
+                    <a href="{% url 'artisan_products' %}" class="btn-outline-exact"><i class="bi bi-box-seam"></i> Ver Mis Productos</a>
+                    <a href="{% url 'artisan_orders' %}" class="btn-outline-exact"><i class="bi bi-bag"></i> Ver Mis Pedidos</a>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;"><i class="bi bi-box-seam"></i> Mis Productos Recientes</h4>
+                    {% if products %}
+                    <div class="table-responsive">
+                        <table class="table-exact">
+                            <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
+                            <tbody>
+                                {% for product in products|slice:":5" %}
+                                <tr>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                                            {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);">
+                                            {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
+                                            <span>{{ product.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td>${{ product.price }}</td>
+                                    <td>{{ product.stock }}</td>
+                                    <td><span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{% if product.active %}Activo{% else %}Inactivo{% endif %}</span></td>
+                                    <td>{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
+                                    <td><a href="{% url 'artisan_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i></a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-box-seam" style="font-size:2rem; color:var(--color-text-light);"></i>
+                        <p style="color:var(--color-text-light); margin-top:0.5rem;">No tienes productos aún.</p>
+                        <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Primer Producto</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

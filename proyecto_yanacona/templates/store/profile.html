@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Mi Perfil — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="profile-card-exact">
+                    <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg, var(--color-rainbow-1), var(--color-rainbow-5)); display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; color:white; font-size:2rem;">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700;">{{ user.name }}</h4>
+                    <p style="color:var(--color-text-light); font-size:0.9rem; margin-bottom:0.3rem;">{{ user.email }}</p>
+                    <p style="color:var(--color-text-light); font-size:0.85rem; margin-bottom:0.3rem;"><i class="bi bi-telephone me-2"></i>{{ user.phone|default:"No registrado" }}</p>
+                    <p style="color:var(--color-text-light); font-size:0.85rem; margin-bottom:1rem;"><i class="bi bi-geo-alt me-2"></i>{{ user.city|default:"No registrada" }}</p>
+                    <a href="{% url 'logout' %}" class="btn-outline-exact" style="width:100%; color:var(--color-rainbow-1); border-color:var(--color-rainbow-1);">Cerrar Sesión</a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <h3 style="font-family:'Playfair Display', serif; font-size:1.3rem; font-weight:700; margin-bottom:1.5rem;">Mis Órdenes</h3>
+                    {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table" style="font-size:0.9rem;">
+                            <thead>
+                                <tr style="border-bottom:2px solid var(--color-border);">
+                                    <th style="border:none; font-weight:700;"># Orden</th>
+                                    <th style="border:none; font-weight:700;">Fecha</th>
+                                    <th style="border:none; font-weight:700;">Total</th>
+                                    <th style="border:none; font-weight:700;">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td style="border-color:var(--color-border);">#{{ order.id }}</td>
+                                    <td style="border-color:var(--color-border);">{{ order.created_at|date:"d/m/Y" }}</td>
+                                    <td style="border-color:var(--color-border); font-weight:600;">{{ order.total|format_price }}</td>
+                                    <td style="border-color:var(--color-border);">
+                                        <span style="display:inline-block; padding:0.2rem 0.7rem; border-radius:50px; font-size:0.75rem; font-weight:600; {% if order.status == 'delivered' %}background:#D4EDDA; color:#155724;{% elif order.status == 'cancelled' %}background:#F8D7DA; color:#721C24;{% elif order.status == 'pending' %}background:#FFF3CD; color:#856404;{% else %}background:#D1ECF1; color:#0C5460;{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-bag-x fs-1" style="color:var(--color-border);"></i>
+                        <p style="color:var(--color-text-light); margin-top:1rem;">No tienes órdenes aún.</p>
+                        <a href="{% url 'shop' %}" class="btn-primary-exact mt-2">Ir a la Tienda</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

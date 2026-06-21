@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Mis Pedidos — Panel Artesano{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-bag"></i> Mis Pedidos</h1>
+        <p class="page-subtitle-exact">Órdenes que contienen tus productos</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th># Orden</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><strong>#{{ order.id }}</strong></td>
+                            <td>{{ order.shipping_name|default:"Anónimo" }}</td>
+                            <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>{{ order.total|format_price }}</td>
+                            <td><span class="badge" style="background:{% if order.status == 'delivered' %}#28a745{% elif order.status == 'pending' %}#ffc107{% elif order.status == 'cancelled' %}#dc3545{% else %}#17a2b8{% endif %}; color:{% if order.status == 'pending' %}#333{% else %}white{% endif %}; padding:0.3rem 0.6rem; border-radius:12px; font-size:0.75rem;">{{ order.get_status_display }}</span></td>
+                            <td><a href="{% url 'artisan_order_detail' order.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-eye"></i> Ver</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-bag-x" style="font-size:3rem; color:var(--color-text-light);"></i>
+                <p style="color:var(--color-text-light); margin-top:1rem;">Aún no tienes pedidos con tus productos.</p>
+                <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Producto</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

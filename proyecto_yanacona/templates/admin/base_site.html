@@ -1,0 +1,546 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | O'NEL Admin{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}" style="display:flex; align-items:center; gap:0.8rem; text-decoration:none; padding:0.5rem 0;">
+        <div style="width:42px; height:42px; background:linear-gradient(135deg, #E74C3C, #F39C12, #2ECC71, #3498DB, #9B59B6); border-radius:10px; display:flex; align-items:center; justify-content:center;">
+            <span style="color:white; font-family:'Playfair Display', serif; font-weight:700; font-size:1.3rem;">O</span>
+        </div>
+        <div>
+            <span style="font-family:'Playfair Display', serif; font-weight:700; font-size:1.1rem; color:white; display:block; line-height:1.2;">O'NEL</span>
+            <span style="color:rgba(255,255,255,0.7); font-size:0.65rem; text-transform:uppercase; letter-spacing:1px;">Panel Administrativo</span>
+        </div>
+    </a>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block extrastyle %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+    :root {
+        --admin-primary: #2C1810;
+        --admin-primary-light: #4A2C1A;
+        --admin-accent: #8B4513;
+        --admin-bg: #F5F0EB;
+        --admin-card: #FFFFFF;
+        --admin-text: #1A1A1A;
+        --admin-text-light: #6B6B6B;
+        --admin-border: #E0D5C8;
+        --admin-success: #2E8B57;
+        --admin-danger: #C0392B;
+        --admin-warning: #E67E22;
+        --admin-info: #2980B9;
+    }
+
+    * { font-family: 'Inter', -apple-system, sans-serif; }
+
+    /* ===== HEADER ===== */
+    #header {
+        background: var(--admin-primary) !important;
+        color: white !important;
+        padding: 0.8rem 2rem !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+    }
+
+    #header a:link, #header a:visited { color: white !important; }
+
+    #user-tools {
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+    }
+
+    #user-tools a {
+        color: rgba(255,255,255,0.85) !important;
+        border-bottom: none !important;
+        padding: 0.4rem 0.8rem !important;
+        border-radius: 6px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    #user-tools a:hover {
+        color: white !important;
+        background: rgba(255,255,255,0.1) !important;
+    }
+
+    /* ===== BREADCRUMBS ===== */
+    div.breadcrumbs {
+        background: var(--admin-card) !important;
+        color: var(--admin-text) !important;
+        padding: 1rem 2rem !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+        border-bottom: 1px solid var(--admin-border) !important;
+    }
+
+    div.breadcrumbs a {
+        color: var(--admin-accent) !important;
+        font-weight: 600 !important;
+    }
+
+    div.breadcrumbs a:hover { color: var(--admin-primary) !important; }
+
+    /* ===== CONTENT ===== */
+    #content {
+        background: var(--admin-bg) !important;
+        padding: 2rem !important;
+    }
+
+    #content-main {
+        background: var(--admin-card) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
+        padding: 2rem !important;
+    }
+
+    #content-related {
+        background: var(--admin-card) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
+        padding: 1.5rem !important;
+    }
+
+    /* ===== MODULES ===== */
+    .module {
+        background: var(--admin-card) !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .module h2, .module caption, .inline-group h2 {
+        background: var(--admin-primary) !important;
+        color: white !important;
+        padding: 1rem 1.5rem !important;
+        font-family: 'Playfair Display', serif !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .module table { width: 100% !important; }
+
+    .module table th, .module table td {
+        padding: 0.9rem 1.2rem !important;
+        border-bottom: 1px solid var(--admin-border) !important;
+    }
+
+    .module table th {
+        background: #FAF7F2 !important;
+        color: var(--admin-primary) !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    .module table tr:hover { background: #FAF7F2 !important; }
+
+    .module table a {
+        color: var(--admin-accent) !important;
+        font-weight: 600 !important;
+    }
+
+    .module table a:hover { color: var(--admin-primary) !important; }
+
+    /* ===== SIDEBAR ===== */
+    #content-related .module h2 {
+        background: var(--admin-primary-light) !important;
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    #content-related .module {
+        border-radius: 12px !important;
+    }
+
+    /* ===== BUTTONS ===== */
+    .button, input[type="submit"], input[type="button"], .submit-row input, .addlink {
+        background: var(--admin-primary) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.7rem 1.4rem !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        transition: all 0.2s ease !important;
+        cursor: pointer !important;
+    }
+
+    .button:hover, input[type="submit"]:hover, input[type="button"]:hover, .addlink:hover {
+        background: var(--admin-accent) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3) !important;
+    }
+
+    .button.default, input[type="submit"].default, .submit-row input.default {
+        background: var(--admin-success) !important;
+    }
+
+    .button.default:hover, input[type="submit"].default:hover {
+        background: #247a4a !important;
+    }
+
+    .deletelink, .delete, .cancel {
+        background: var(--admin-danger) !important;
+    }
+
+    .deletelink:hover, .delete:hover {
+        background: #a93226 !important;
+    }
+
+    .addlink {
+        background: var(--admin-success) !important;
+        padding: 0.5rem 1rem !important;
+    }
+
+    .addlink:hover { background: #247a4a !important; }
+
+    .changelink { color: var(--admin-info) !important; }
+
+    /* ===== FORM ROWS ===== */
+    .form-row {
+        border-bottom: 1px solid var(--admin-border) !important;
+        padding: 1.2rem !important;
+    }
+
+    .form-row:hover { background: #FAF7F2 !important; }
+
+    label {
+        color: var(--admin-primary) !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+    }
+
+    .required label, .required label:after {
+        color: var(--admin-danger) !important;
+    }
+
+    /* ===== INPUTS ===== */
+    input, textarea, select, .vTextField, .vURLField, .vLargeTextField, .vXMLLargeTextField {
+        border: 1.5px solid var(--admin-border) !important;
+        border-radius: 8px !important;
+        padding: 0.6rem 0.9rem !important;
+        background: white !important;
+        font-size: 0.9rem !important;
+        transition: all 0.2s ease !important;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: var(--admin-accent) !important;
+        box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1) !important;
+        outline: none !important;
+    }
+
+    /* ===== TABLE LIST ===== */
+    #changelist {
+        background: var(--admin-card) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
+        padding: 1.5rem !important;
+    }
+
+    #changelist table thead th {
+        background: var(--admin-primary) !important;
+        color: white !important;
+        padding: 1rem 1.2rem !important;
+        font-weight: 600 !important;
+        font-size: 0.8rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+    }
+
+    #changelist table tbody tr:hover { background: #FAF7F2 !important; }
+
+    #changelist table tbody td {
+        padding: 0.9rem 1.2rem !important;
+        border-bottom: 1px solid var(--admin-border) !important;
+    }
+
+    /* ===== FILTER SIDEBAR ===== */
+    #changelist-filter {
+        background: var(--admin-card) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.06) !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    #changelist-filter h2 {
+        background: var(--admin-primary) !important;
+        color: white !important;
+        padding: 1rem 1.5rem !important;
+        font-family: 'Playfair Display', serif !important;
+        font-weight: 600 !important;
+        font-size: 1rem !important;
+    }
+
+    #changelist-filter h3 {
+        padding: 0.8rem 1.5rem !important;
+        color: var(--admin-primary) !important;
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+    }
+
+    #changelist-filter ul {
+        padding: 0 1.5rem 1rem !important;
+    }
+
+    #changelist-filter li {
+        margin-bottom: 0.3rem !important;
+    }
+
+    #changelist-filter a {
+        color: var(--admin-text) !important;
+        font-size: 0.85rem !important;
+        padding: 0.3rem 0 !important;
+        display: block !important;
+    }
+
+    #changelist-filter a:hover { color: var(--admin-accent) !important; }
+
+    #changelist-filter .selected {
+        background: #FAF7F2 !important;
+        border-radius: 6px !important;
+        padding: 0.3rem 0.8rem !important;
+        margin-left: -0.8rem !important;
+    }
+
+    #changelist-filter .selected a {
+        color: var(--admin-accent) !important;
+        font-weight: 600 !important;
+    }
+
+    /* ===== MESSAGES ===== */
+    ul.messagelist {
+        padding: 0 !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    ul.messagelist li {
+        border-radius: 8px !important;
+        padding: 1rem 1.5rem !important;
+        margin-bottom: 0.5rem !important;
+        font-weight: 500 !important;
+        font-size: 0.9rem !important;
+    }
+
+    ul.messagelist li.success {
+        background: #E8F5E9 !important;
+        color: #1B5E20 !important;
+        border: 1px solid #C8E6C9 !important;
+    }
+
+    ul.messagelist li.error {
+        background: #FFEBEE !important;
+        color: #B71C1C !important;
+        border: 1px solid #FFCDD2 !important;
+    }
+
+    ul.messagelist li.warning {
+        background: #FFF3E0 !important;
+        color: #E65100 !important;
+        border: 1px solid #FFE0B2 !important;
+    }
+
+    ul.messagelist li.info {
+        background: #E3F2FD !important;
+        color: #0D47A1 !important;
+        border: 1px solid #BBDEFB !important;
+    }
+
+    /* ===== PAGINATION ===== */
+    .paginator {
+        background: #FAF7F2 !important;
+        border-radius: 8px !important;
+        padding: 1rem 1.5rem !important;
+        margin-top: 1rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .paginator a {
+        color: var(--admin-accent) !important;
+        font-weight: 600 !important;
+        padding: 0.3rem 0.6rem !important;
+        border-radius: 4px !important;
+    }
+
+    .paginator a:hover {
+        background: var(--admin-primary) !important;
+        color: white !important;
+    }
+
+    .paginator .this-page {
+        font-weight: 700 !important;
+        color: var(--admin-primary) !important;
+    }
+
+    /* ===== ACTIONS ===== */
+    .actions {
+        background: #FAF7F2 !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .actions select {
+        border-radius: 6px !important;
+        padding: 0.5rem !important;
+    }
+
+    /* ===== LOGIN PAGE ===== */
+    body.login {
+        background: linear-gradient(135deg, #F5F0EB 0%, #E8DDD0 100%) !important;
+        min-height: 100vh !important;
+    }
+
+    body.login #header { display: none !important; }
+
+    body.login #container {
+        background: white !important;
+        border-radius: 16px !important;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.1) !important;
+        padding: 0 !important;
+        max-width: 420px !important;
+        width: 90% !important;
+        overflow: hidden !important;
+        border: 1px solid var(--admin-border) !important;
+    }
+
+    body.login #content {
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    body.login .login-header {
+        background: var(--admin-primary) !important;
+        padding: 2rem !important;
+        text-align: center !important;
+    }
+
+    body.login .login-header img {
+        height: 50px !important;
+        margin-bottom: 0.5rem !important;
+        filter: brightness(0) invert(1) !important;
+    }
+
+    body.login .login-header h1 {
+        font-family: 'Playfair Display', serif !important;
+        font-size: 1.4rem !important;
+        color: white !important;
+        margin: 0 !important;
+    }
+
+    body.login .login-header p {
+        color: rgba(255,255,255,0.7) !important;
+        font-size: 0.8rem !important;
+        margin-top: 0.3rem !important;
+    }
+
+    body.login .login-form {
+        padding: 2rem !important;
+    }
+
+    body.login .form-row {
+        border: none !important;
+        padding: 0.8rem 0 !important;
+    }
+
+    body.login .form-row label {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 0.85rem !important;
+        color: var(--admin-primary) !important;
+    }
+
+    body.login .form-row input {
+        width: 100% !important;
+        padding: 0.8rem !important;
+        border: 1.5px solid var(--admin-border) !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+    }
+
+    body.login .form-row input:focus {
+        border-color: var(--admin-accent) !important;
+        box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1) !important;
+    }
+
+    body.login .submit-row {
+        padding: 0 !important;
+        margin-top: 1rem !important;
+    }
+
+    body.login .submit-row input {
+        width: 100% !important;
+        padding: 0.9rem !important;
+        background: var(--admin-primary) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 1rem !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+    }
+
+    body.login .submit-row input:hover {
+        background: var(--admin-accent) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3) !important;
+    }
+
+    body.login .password-reset {
+        text-align: center !important;
+        padding: 1rem 2rem 2rem !important;
+    }
+
+    body.login .password-reset a {
+        color: var(--admin-accent) !important;
+        font-size: 0.85rem !important;
+        text-decoration: none !important;
+    }
+
+    body.login .password-reset a:hover { text-decoration: underline !important; }
+
+    body.login .errornote {
+        background: #FFEBEE !important;
+        color: #B71C1C !important;
+        border: 1px solid #FFCDD2 !important;
+        border-radius: 8px !important;
+        padding: 1rem !important;
+        margin: 1rem 2rem 0 !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* ===== FOOTER ===== */
+    #footer {
+        background: var(--admin-primary) !important;
+        color: rgba(255,255,255,0.6) !important;
+        padding: 1rem 2rem !important;
+        font-size: 0.8rem !important;
+        text-align: center !important;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+        #content { padding: 1rem !important; }
+        #content-main { padding: 1.5rem !important; }
+    }
+
+    @media (max-width: 768px) {
+        #header { padding: 0.8rem 1rem !important; }
+        .breadcrumbs { padding: 0.8rem 1rem !important; }
+        #content { padding: 1rem !important; }
+        #content-main { padding: 1rem !important; }
+    }
+</style>
+{% endblock %}

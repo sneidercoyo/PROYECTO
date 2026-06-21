@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Editar Usuario — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-pencil"></i> Editar Usuario</h1>
+        <p class="page-subtitle-exact">{{ user.name }}</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:600px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre completo</label>
+                        <input type="text" name="name" class="form-control-exact" value="{{ user.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Correo electrónico</label>
+                        <input type="email" name="email" class="form-control-exact" value="{{ user.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Teléfono</label>
+                        <input type="text" name="phone" class="form-control-exact" value="{{ user.phone }}">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Dirección</label>
+                        <textarea name="address" class="form-control-exact" rows="2">{{ user.address }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Ciudad</label>
+                        <input type="text" name="city" class="form-control-exact" value="{{ user.city }}">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Rol</label>
+                        <select name="role" class="form-control-exact" required>
+                            <option value="customer" {% if user.role == 'customer' %}selected{% endif %}>Cliente</option>
+                            <option value="artisan" {% if user.role == 'artisan' %}selected{% endif %}>Artesano</option>
+                            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Administrador</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                            <input type="checkbox" name="active" {% if user.active %}checked{% endif %} style="width:18px; height:18px;">
+                            <span style="font-size:0.85rem; font-weight:600;">Usuario activo</span>
+                        </label>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
+                        <a href="{% url 'admin_users' %}" class="btn-outline-exact">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

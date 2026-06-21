@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Nueva Categoría — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-plus-lg"></i> Nueva Categoría</h1>
+        <p class="page-subtitle-exact">Agrega una categoría de productos</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:600px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre *</label>
+                        <input type="text" name="name" class="form-control-exact" required>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Slug (URL)</label>
+                        <input type="text" name="slug" class="form-control-exact" placeholder="Se genera automático si se deja vacío">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Descripción</label>
+                        <textarea name="description" class="form-control-exact" rows="3"></textarea>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Crear Categoría</button>
+                        <a href="{% url 'admin_categories' %}" class="btn-outline-exact">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

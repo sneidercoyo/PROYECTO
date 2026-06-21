@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Carrito — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact">Mi Carrito</h1>
+        <p class="page-subtitle-exact">Revisa tus productos antes de comprar</p>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="section-inner">
+        {% if items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="cart-table-exact">
+                    <div class="table-responsive">
+                        <table class="table" style="font-size:0.9rem; margin-bottom:0;">
+                            <thead>
+                                <tr style="border-bottom:2px solid var(--color-border);">
+                                    <th style="border:none; padding:1rem 1.5rem; font-weight:700;">Producto</th>
+                                    <th style="border:none; padding:1rem 1.5rem; font-weight:700;">Precio</th>
+                                    <th style="border:none; padding:1rem 1.5rem; font-weight:700;">Cantidad</th>
+                                    <th style="border:none; padding:1rem 1.5rem; font-weight:700;">Subtotal</th>
+                                    <th style="border:none; padding:1rem 1.5rem; width:50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td style="border-color:var(--color-border); padding:1rem 1.5rem;">
+                                        <div class="d-flex align-items-center">
+                                            {% if item.product.image %}
+                                            <img src="{{ item.product.image.url }}" alt="" style="width:60px; height:60px; object-fit:cover; border-radius:var(--radius-sm); margin-right:1rem;">
+                                            {% else %}
+                                            <div style="width:60px; height:60px; display:flex; align-items:center; justify-content:center; background:var(--color-bg); border-radius:var(--radius-sm); margin-right:1rem; color:var(--color-border);"><i class="bi bi-image"></i></div>
+                                            {% endif %}
+                                            <div>
+                                                <h6 style="margin-bottom:0; font-weight:700; font-size:0.9rem;">{{ item.product.name }}</h6>
+                                                <small style="color:var(--color-text-light);">{{ item.product.category.name }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="border-color:var(--color-border); padding:1rem 1.5rem; vertical-align:middle;">{{ item.product.price|format_price }}</td>
+                                    <td style="border-color:var(--color-border); padding:1rem 1.5rem; vertical-align:middle;">
+                                        <form action="{% url 'update_cart' item.id %}" method="post" class="d-flex align-items-center" style="gap:0.5rem;">
+                                            {% csrf_token %}
+                                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control-exact" style="width:60px; text-align:center; padding:0.4rem;">
+                                            <button type="submit" class="btn-outline-exact" style="padding:0.4rem 0.6rem;"><i class="bi bi-arrow-repeat"></i></button>
+                                        </form>
+                                    </td>
+                                    <td style="border-color:var(--color-border); padding:1rem 1.5rem; vertical-align:middle; font-weight:700;">{{ item.subtotal|format_price }}</td>
+                                    <td style="border-color:var(--color-border); padding:1rem 1.5rem; vertical-align:middle;">
+                                        <a href="{% url 'remove_from_cart' item.id %}" class="btn-outline-exact" style="padding:0.4rem 0.6rem; color:var(--color-rainbow-1); border-color:var(--color-rainbow-1);"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-summary-exact">
+                    <h5 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;">Resumen del Pedido</h5>
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.9rem;">
+                        <span style="color:var(--color-text-light);">Subtotal</span>
+                        <span style="font-weight:600;">{{ total|format_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.9rem;">
+                        <span style="color:var(--color-text-light);">Envío</span>
+                        <span style="color:var(--color-accent-green); font-weight:600;">Gratis</span>
+                    </div>
+                    <hr style="border-color:var(--color-border); margin:1rem 0;">
+                    <div class="d-flex justify-content-between mb-4">
+                        <span style="font-weight:700;">Total</span>
+                        <span style="font-weight:700; font-size:1.3rem; color:var(--color-accent-green);">{{ total|format_price }}</span>
+                    </div>
+                    <a href="{% url 'checkout' %}" class="btn-primary-exact" style="width:100%; margin-bottom:0.5rem;">Proceder al Pago</a>
+                    <a href="{% url 'shop' %}" class="btn-outline-exact" style="width:100%;">Seguir Comprando</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-cart-x fs-1" style="color:var(--color-border);"></i>
+            <h4 style="font-family:'Playfair Display', serif; margin-top:1rem; margin-bottom:0.5rem;">Tu carrito está vacío</h4>
+            <p style="color:var(--color-text-light);">Explora nuestra tienda y encuentra artesanías únicas.</p>
+            <a href="{% url 'shop' %}" class="btn-primary-exact btn-lg mt-3">Ir a la Tienda</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Tienda — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact">Nuestra Tienda</h1>
+        <p class="page-subtitle-exact">Artesanías auténticas del pueblo Yanacona</p>
+    </div>
+</section>
+
+<!-- Shop Content -->
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="sidebar-exact">
+                    <div class="mb-4">
+                        <h6 class="sidebar-title-exact">Buscar</h6>
+                        <form method="get" action="{% url 'shop' %}">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control-exact" placeholder="Buscar producto..." value="{{ search|default:'' }}">
+                                <button class="btn-primary-exact" type="submit" style="padding:0.5rem 1rem;"><i class="bi bi-search"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mb-4">
+                        <h6 class="sidebar-title-exact">Categorías</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <a href="{% url 'shop' %}" class="btn-outline-exact {% if not current_category %}active{% endif %}" style="justify-content:flex-start;">Todas</a>
+                            {% for cat in categories %}
+                            <a href="{% url 'shop' %}?category={{ cat.slug }}" class="btn-outline-exact {% if current_category == cat.slug %}active{% endif %}" style="justify-content:flex-start;">{{ cat.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="sidebar-title-exact">Ordenar</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if search %}search={{ search }}&{% endif %}sort=name" class="btn-outline-exact {% if sort == 'name' %}active{% endif %}" style="justify-content:flex-start;">Nombre A-Z</a>
+                            <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if search %}search={{ search }}&{% endif %}sort=price_asc" class="btn-outline-exact {% if sort == 'price_asc' %}active{% endif %}" style="justify-content:flex-start;">Precio: Menor a Mayor</a>
+                            <a href="?{% if current_category %}category={{ current_category }}&{% endif %}{% if search %}search={{ search }}&{% endif %}sort=price_desc" class="btn-outline-exact {% if sort == 'price_desc' %}active{% endif %}" style="justify-content:flex-start;">Precio: Mayor a Menor</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="mb-0" style="color:var(--color-text-light); font-size:0.9rem;">{{ products|length }} producto{{ products|length|pluralize:"s" }}</p>
+                </div>
+                <div class="products-grid">
+                    {% for product in products %}
+                    <div class="product-card-exact">
+                        <span class="product-number-badge">{{ forloop.counter }}</span>
+                        <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                        <div class="product-img-wrap">
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% else %}
+                            <div class="product-img-placeholder"><i class="bi bi-image"></i></div>
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">{{ product.name }}</h3>
+                            <p class="product-artisan">
+                                {% if product.artisan %}
+                                Artesana: {{ product.artisan.name }}
+                                {% else %}
+                                Artesano: Cabildo Yanacona
+                                {% endif %}
+                            </p>
+                            <p class="product-price">{{ product.price|format_price }} COP</p>
+                            <p class="product-stock">Stock: {{ product.stock }} unidades</p>
+                            <a href="{% url 'product_detail' product.slug %}" class="btn-buy">
+                                <i class="bi bi-cart"></i> COMPRAR
+                            </a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-inbox fs-1" style="color:var(--color-border);"></i>
+                        <p style="color:var(--color-text-light); margin-top:1rem;">No se encontraron productos.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

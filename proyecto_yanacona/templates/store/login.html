@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="section-padding" style="padding-top:4rem; padding-bottom:4rem;">
+    <div class="section-inner">
+        <div class="auth-card-exact">
+            <div class="text-center mb-4">
+                <img src="{% static 'images/logo.png' %}" alt="O'NEL" style="height:50px; margin-bottom:1rem;">
+                <h3 style="font-family:'Playfair Display', serif; font-weight:700;">Iniciar Sesión</h3>
+                <p style="color:var(--color-text-light); font-size:0.9rem;">Accede a tu cuenta de O'NEL Artesanías</p>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Correo electrónico</label>
+                    <input type="email" name="email" class="form-control-exact" required>
+                </div>
+                <div class="mb-3">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Contraseña</label>
+                    <input type="password" name="password" class="form-control-exact" required>
+                </div>
+                <button type="submit" class="btn-primary-exact" style="width:100%;">Ingresar</button>
+            </form>
+            <div class="text-center mt-3">
+                <p style="color:var(--color-text-light); font-size:0.85rem;">¿No tienes cuenta? <a href="{% url 'register' %}" style="color:var(--color-rainbow-4); font-weight:600; text-decoration:none;">Regístrate</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

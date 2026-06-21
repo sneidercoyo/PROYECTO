@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ product.name }} — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="section-inner">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb-exact">
+                <li><a href="{% url 'home' %}">Inicio</a></li>
+                <li><i class="bi bi-chevron-right" style="font-size:0.7rem;"></i></li>
+                <li><a href="{% url 'shop' %}">Tienda</a></li>
+                <li><i class="bi bi-chevron-right" style="font-size:0.7rem;"></i></li>
+                <li style="color:var(--color-text-light);">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft); display:flex; align-items:center; justify-content:center; min-height:400px;">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:100%; max-height:360px; object-fit:contain;">
+                    {% else %}
+                    <div style="color:var(--color-border); font-size:5rem;"><i class="bi bi-image"></i></div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <span style="display:inline-block; background:linear-gradient(90deg, var(--color-rainbow-1), var(--color-rainbow-2)); color:white; padding:0.3rem 1rem; border-radius:50px; font-size:0.75rem; font-weight:700; margin-bottom:1rem;">{{ product.category.name }}</span>
+                <h1 style="font-family:'Playfair Display', serif; font-size:2rem; font-weight:700; color:var(--color-text); margin-bottom:0.5rem;">{{ product.name }}</h1>
+                <p style="font-size:1.5rem; font-weight:700; color:var(--color-accent-green); margin-bottom:1rem;">{{ product.price|format_price }} COP</p>
+                <p style="color:var(--color-text-light); margin-bottom:1.5rem; line-height:1.7;">{{ product.description }}</p>
+
+                <div style="background:var(--color-white); border-radius:var(--radius-md); border:1px solid var(--color-border); padding:1rem 1.5rem; margin-bottom:1.5rem;">
+                    <p style="margin-bottom:0.5rem; font-size:0.9rem;"><strong>Stock:</strong> <span style="color:var(--color-accent-green); font-weight:600;">{{ product.stock }} unidades disponibles</span></p>
+                    {% if product.artisan %}
+                    <p style="margin-bottom:0; font-size:0.9rem;"><strong>Artesano:</strong> <a href="{% url 'artisan_detail' product.artisan.slug %}" style="color:var(--color-rainbow-4); text-decoration:none; font-weight:600;">{{ product.artisan.name }}</a></p>
+                    {% endif %}
+                </div>
+
+                {% if request.session.user_id %}
+                <form action="{% url 'add_to_cart' product.id %}" method="post" class="d-flex gap-3 align-items-center flex-wrap">
+                    {% csrf_token %}
+                    <div style="display:flex; align-items:center; gap:0.5rem; border:1px solid var(--color-border); border-radius:var(--radius-sm); padding:0.3rem;">
+                        <button type="button" style="width:36px; height:36px; border:none; background:var(--color-bg); border-radius:var(--radius-sm); cursor:pointer; font-weight:700;" onclick="this.parentNode.querySelector('input').stepDown()">-</button>
+                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" style="width:50px; text-align:center; border:none; background:transparent; font-weight:600;">
+                        <button type="button" style="width:36px; height:36px; border:none; background:var(--color-bg); border-radius:var(--radius-sm); cursor:pointer; font-weight:700;" onclick="this.parentNode.querySelector('input').stepUp()">+</button>
+                    </div>
+                    <button type="submit" class="btn-primary-exact" style="flex:1; min-width:200px;">
+                        <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                    </button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn-primary-exact" style="display:inline-flex;">
+                    <i class="bi bi-box-arrow-in-right"></i> Inicia sesión para comprar
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if related_products %}
+        <hr style="border-color:var(--color-border); margin:3rem 0;">
+        <h2 style="font-family:'Playfair Display', serif; font-size:1.5rem; font-weight:700; margin-bottom:1.5rem;">Productos Relacionados</h2>
+        <div class="products-grid">
+            {% for p in related_products %}
+            <div class="product-card-exact">
+                <span class="product-number-badge">{{ forloop.counter }}</span>
+                <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                <div class="product-img-wrap">
+                    {% if p.image %}
+                    <img src="{{ p.image.url }}" alt="{{ p.name }}">
+                    {% else %}
+                    <div class="product-img-placeholder"><i class="bi bi-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ p.name }}</h3>
+                    <p class="product-price">{{ p.price|format_price }} COP</p>
+                    <a href="{% url 'product_detail' p.slug %}" class="btn-buy">
+                        <i class="bi bi-cart"></i> COMPRAR
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Pedido #{{ order.id }} — Panel Artesano{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-bag"></i> Pedido #{{ order.id }}</h1>
+        <p class="page-subtitle-exact">Detalle de la orden</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft); margin-bottom:1.5rem;">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1rem;">Productos de esta orden</h4>
+                    {% if items %}
+                    <div class="table-responsive">
+                        <table class="table-exact">
+                            <thead><tr><th>Producto</th><th>Precio Unit.</th><th>Cantidad</th><th>Subtotal</th></tr></thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:0.75rem;">
+                                            {% if item.product and item.product.image %}<img src="{{ item.product.image.url }}" alt="{{ item.product_name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);">
+                                            {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
+                                            <span>{{ item.product_name }}</span>
+                                        </div>
+                                    </td>
+                                    <td>{{ item.price|format_price }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.subtotal|format_price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}<p style="color:var(--color-text-light);">No hay productos tuyos en esta orden.</p>{% endif %}
+                </div>
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1rem;">Actualizar Estado</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                            <select name="status" class="form-control-exact" style="width:auto; min-width:200px;">
+                                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pendiente</option>
+                                <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>En proceso</option>
+                                <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Enviado</option>
+                                <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Entregado</option>
+                                <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                            </select>
+                            <button type="submit" class="btn-primary-exact"><i class="bi bi-arrow-repeat"></i> Actualizar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft); margin-bottom:1.5rem;">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1rem;">Datos de Envío</h4>
+                    <div style="font-size:0.9rem; color:var(--color-text-light); line-height:1.8;">
+                        <p><strong style="color:var(--color-text);">Nombre:</strong> {{ order.shipping_name|default:"No especificado" }}</p>
+                        <p><strong style="color:var(--color-text);">Dirección:</strong> {{ order.shipping_address|default:"No especificada"|linebreaksbr }}</p>
+                        <p><strong style="color:var(--color-text);">Ciudad:</strong> {{ order.shipping_city|default:"No especificada" }}</p>
+                        <p><strong style="color:var(--color-text);">Teléfono:</strong> {{ order.shipping_phone|default:"No especificado" }}</p>
+                        {% if order.notes %}<p><strong style="color:var(--color-text);">Notas:</strong> {{ order.notes }}</p>{% endif %}
+                    </div>
+                    <hr style="margin:1.5rem 0; border-color:var(--color-border);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:600;">Total Orden:</span>
+                        <span style="font-family:'Playfair Display', serif; font-weight:700; font-size:1.2rem; color:var(--color-rainbow-4);">{{ order.total|format_price }}</span>
+                    </div>
+                </div>
+                <div><a href="{% url 'artisan_orders' %}" class="btn-outline-exact" style="width:100%;"><i class="bi bi-arrow-left"></i> Volver a Pedidos</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

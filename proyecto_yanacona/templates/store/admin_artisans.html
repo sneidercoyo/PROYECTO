@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Artesanos — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-shop"></i> Gestión de Artesanos</h1>
+        <p class="page-subtitle-exact">Administra los artesanos de la tienda</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="margin-bottom:1.5rem;">
+            <a href="{% url 'admin_add_artisan' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nuevo Artesano</a>
+        </div>
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if artisans %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th>Artesano</th><th>Especialidad</th><th>Estado</th><th>Registro</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for artisan in artisans %}
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:0.75rem;">
+                                    {% if artisan.image %}<img src="{{ artisan.image.url }}" alt="{{ artisan.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:50%;">
+                                    {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:50%; display:flex; align-items:center; justify-content:center;"><i class="bi bi-person" style="color:var(--color-text-light);"></i></div>{% endif %}
+                                    <span><strong>{{ artisan.name }}</strong></span>
+                                </div>
+                            </td>
+                            <td>{{ artisan.specialty|default:"No especificada" }}</td>
+                            <td><span class="badge" style="background:{% if artisan.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.3rem 0.6rem; border-radius:12px; font-size:0.75rem;">{% if artisan.active %}Activo{% else %}Inactivo{% endif %}</span></td>
+                            <td>{{ artisan.created_at|date:"d/m/Y" }}</td>
+                            <td><a href="{% url 'admin_edit_artisan' artisan.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i> Editar</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}<p style="color:var(--color-text-light);">No hay artesanos registrados.</p>{% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

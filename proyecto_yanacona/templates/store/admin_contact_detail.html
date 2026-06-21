@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mensaje — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-envelope"></i> Mensaje de Contacto</h1>
+        <p class="page-subtitle-exact">De: {{ contact.name }}</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:700px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                <div style="margin-bottom:1.5rem;">
+                    <p style="color:var(--color-text-light); font-size:0.9rem; margin-bottom:0.3rem;"><i class="bi bi-person"></i> <strong>{{ contact.name }}</strong></p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem; margin-bottom:0.3rem;"><i class="bi bi-envelope"></i> {{ contact.email }}</p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem; margin-bottom:0.3rem;"><i class="bi bi-telephone"></i> {{ contact.phone|default:"No especificado" }}</p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;"><i class="bi bi-clock"></i> {{ contact.created_at|date:"d/m/Y H:i" }}</p>
+                    {% if contact.read_at %}<p style="color:var(--color-text-light); font-size:0.9rem;"><i class="bi bi-check-circle"></i> Leído el {{ contact.read_at|date:"d/m/Y H:i" }}</p>{% endif %}
+                </div>
+                <hr style="border-color:var(--color-border);">
+                <div style="background:var(--color-cream); border-radius:var(--radius-md); padding:1.5rem; margin-top:1rem;">
+                    <p style="white-space:pre-wrap; margin:0;">{{ contact.message }}</p>
+                </div>
+                <div style="margin-top:1.5rem;">
+                    <a href="{% url 'admin_contacts' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Volver a Mensajes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

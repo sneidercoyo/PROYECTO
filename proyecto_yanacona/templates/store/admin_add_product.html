@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Nuevo Producto — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-plus-lg"></i> Nuevo Producto</h1>
+        <p class="page-subtitle-exact">Crear producto para cualquier artesano</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:700px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre del producto *</label>
+                        <input type="text" name="name" class="form-control-exact" required>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Slug (URL)</label>
+                        <input type="text" name="slug" class="form-control-exact" placeholder="Se genera automático si se deja vacío">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Descripción</label>
+                        <textarea name="description" class="form-control-exact" rows="4"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Precio (COP) *</label>
+                            <input type="number" name="price" class="form-control-exact" required min="0" step="0.01">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Stock *</label>
+                            <input type="number" name="stock" class="form-control-exact" required min="0" value="1">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Categoría</label>
+                            <select name="category" class="form-control-exact">
+                                <option value="">-- Selecciona --</option>
+                                {% for cat in categories %}<option value="{{ cat.id }}">{{ cat.name }}</option>{% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Artesano</label>
+                            <select name="artisan" class="form-control-exact">
+                                <option value="">-- Selecciona --</option>
+                                {% for art in artisans %}<option value="{{ art.id }}">{{ art.name }}</option>{% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                                <input type="checkbox" name="featured" style="width:18px; height:18px;">
+                                <span style="font-size:0.85rem; font-weight:600;">Destacar en inicio</span>
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                                <input type="checkbox" name="active" checked style="width:18px; height:18px;">
+                                <span style="font-size:0.85rem; font-weight:600;">Activo</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Crear Producto</button>
+                        <a href="{% url 'admin_products' %}" class="btn-outline-exact">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Registro — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="section-padding" style="padding-top:4rem; padding-bottom:4rem;">
+    <div class="section-inner">
+        <div class="auth-card-exact" style="max-width:550px;">
+            <div class="text-center mb-4">
+                <img src="{% static 'images/logo.png' %}" alt="O'NEL" style="height:50px; margin-bottom:1rem;">
+                <h3 style="font-family:'Playfair Display', serif; font-weight:700;">Crear Cuenta</h3>
+                <p style="color:var(--color-text-light); font-size:0.9rem;">Únete a la comunidad O'NEL Artesanías</p>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre completo</label>
+                        <input type="text" name="name" class="form-control-exact" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Correo electrónico</label>
+                        <input type="email" name="email" class="form-control-exact" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Contraseña</label>
+                    <input type="password" name="password" class="form-control-exact" required>
+                </div>
+                <div class="mb-3">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Teléfono</label>
+                    <input type="text" name="phone" class="form-control-exact">
+                </div>
+                <div class="mb-3">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Dirección</label>
+                    <textarea name="address" class="form-control-exact" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Ciudad</label>
+                    <input type="text" name="city" class="form-control-exact">
+                </div>
+                <button type="submit" class="btn-primary-exact" style="width:100%;">Registrarse</button>
+            </form>
+            <div class="text-center mt-3">
+                <p style="color:var(--color-text-light); font-size:0.85rem;">¿Ya tienes cuenta? <a href="{% url 'login' %}" style="color:var(--color-rainbow-4); font-weight:600; text-decoration:none;">Inicia sesión</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

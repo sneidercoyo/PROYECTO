@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mensajes — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-envelope"></i> Mensajes de Contacto</h1>
+        <p class="page-subtitle-exact">Todos los mensajes recibidos</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if contacts %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for contact in contacts %}
+                        <tr>
+                            <td><strong>{{ contact.name }}</strong></td>
+                            <td>{{ contact.email }}</td>
+                            <td>{{ contact.phone|default:"N/A" }}</td>
+                            <td>{% if contact.read_at %}<span class="badge" style="background:#28a745; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">Leído</span>{% else %}<span class="badge" style="background:#ffc107; color:#333; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">Nuevo</span>{% endif %}</td>
+                            <td>{{ contact.created_at|date:"d/m/Y H:i" }}</td>
+                            <td><a href="{% url 'admin_contact_detail' contact.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-eye"></i> Ver</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}<p style="color:var(--color-text-light);">No hay mensajes.</p>{% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

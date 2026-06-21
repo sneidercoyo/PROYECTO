@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nosotros — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact">Sobre O'NEL Artesanías</h1>
+        <p class="page-subtitle-exact">Cabildo Yanacona de Puerto Caicedo, Putumayo</p>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4">
+                <div style="border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-card);">
+                    <img src="{% static 'images/hero_reference.png' %}" alt="Artesanías Yanacona" style="width:100%; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1606293926075-69a00febfcc1?w=600'">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h2 style="font-family:'Playfair Display', serif; font-size:1.8rem; font-weight:700; color:var(--color-text); margin-bottom:1rem;">Nuestra Historia</h2>
+                <p style="color:var(--color-text-light); line-height:1.8; margin-bottom:1rem;">O'NEL Artesanías nace del compromiso del Cabildo Yanacona de Puerto Caicedo con la preservación y difusión de nuestras tradiciones ancestrales. Somos un colectivo de artesanos que ha mantenido vivas las técnicas de tejido, cerámica y tapicería transmitidas de generación en generación.</p>
+                <p style="color:var(--color-text-light); line-height:1.8; margin-bottom:1.5rem;">Cada pieza que ofrecemos es el resultado de un profundo conocimiento de la tierra, las fibras naturales y los patrones sagrados que representan nuestra cosmovisión.</p>
+                <a href="{% url 'shop' %}" class="btn-primary-exact">Explorar Tienda</a>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col-md-4 mb-4">
+                <div class="artisan-card-exact" style="padding:2.5rem;">
+                    <i class="bi bi-heart-fill" style="font-size:2.5rem; color:var(--color-rainbow-1); margin-bottom:1rem;"></i>
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:0.5rem;">Tradición</h4>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Técnicas ancestrales preservadas por generaciones de artesanos Yanacona.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="artisan-card-exact" style="padding:2.5rem;">
+                    <i class="bi bi-globe-americas" style="font-size:2.5rem; color:var(--color-rainbow-3); margin-bottom:1rem;"></i>
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:0.5rem;">Sostenibilidad</h4>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Materiales naturales y procesos respetuosos con el medio ambiente.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="artisan-card-exact" style="padding:2.5rem;">
+                    <i class="bi bi-people-fill" style="font-size:2.5rem; color:var(--color-rainbow-4); margin-bottom:1rem;"></i>
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:0.5rem;">Comunidad</h4>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Apoyo directo a las familias artesanas del Cabildo Yanacona.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

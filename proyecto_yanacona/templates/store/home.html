@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}O'NEL Artesanías — Artesanías Pueblo Yanacona{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-inner">
+        <div class="hero-image-area">
+            <div class="hero-image-wrapper">
+                <img src="{% static 'images/artesana_tejido.png' %}" alt="Artesana Yanacona tejiendo" class="hero-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div style="display:none; width:100%; height:420px; background:linear-gradient(135deg, #F0E8DC, #E8DDD0); align-items:center; justify-content:center; color:#C0B5A8; font-size:4rem;">
+                    <i class="bi bi-image"></i>
+                </div>
+            </div>
+        </div>
+        <div class="hero-content-area">
+            <h1 class="hero-title">Artesanías<br>Pueblo Yanacona</h1>
+            <p class="hero-subtitle">Diimas O'nel Majín</p>
+            <p class="hero-text">Creaciones que nacen de nuestras manos, nuestras historias y la fuerza de la naturaleza.</p>
+            <div class="hero-features">
+                <div class="feature-pill hand">
+                    <i class="bi bi-hand-thumbs-up"></i>
+                    <span>HECHAS A MANO</span>
+                </div>
+                <div class="feature-pill ancestral">
+                    <i class="bi bi-infinity"></i>
+                    <span>SABER ANCESTRAL</span>
+                </div>
+                <div class="feature-pill natural">
+                    <i class="bi bi-leaf"></i>
+                    <span>MATERIALES NATURALES</span>
+                </div>
+                <div class="feature-pill just">
+                    <i class="bi bi-heart"></i>
+                    <span>COMERCIO JUSTO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section — Solo 3 productos como el mockup -->
+<section class="products-section">
+    <div class="section-inner">
+        <div class="products-grid">
+            {% for product in featured_products %}
+            <div class="product-card-exact">
+                <span class="product-number-badge">0{{ forloop.counter }}</span>
+                <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                <div class="product-img-wrap">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                    <div class="product-img-placeholder"><i class="bi bi-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-artisan">
+                        {% if product.artisan %}
+                        Artesana: {{ product.artisan.name }}
+                        {% else %}
+                        Artesano: Cabildo Yanacona
+                        {% endif %}
+                    </p>
+                    <p class="product-price">{{ product.price|format_price }} COP</p>
+                    <p class="product-stock">Stock: {{ product.stock }} unidades</p>
+                    <a href="{% url 'product_detail' product.slug %}" class="btn-buy">
+                        <i class="bi bi-cart"></i> COMPRAR
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="product-card-exact">
+                <span class="product-number-badge">01</span>
+                <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                <div class="product-img-wrap">
+                    <img src="{% static 'images/cesteria.png' %}" alt="Bolso Tejido Yanacona">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Bolso Tejido Yanacona</h3>
+                    <p class="product-artisan">Artesana: María Lucumí</p>
+                    <p class="product-price">$120.000 COP</p>
+                    <p class="product-stock">Stock: 8 unidades</p>
+                    <a href="{% url 'shop' %}" class="btn-buy">
+                        <i class="bi bi-cart"></i> COMPRAR
+                    </a>
+                </div>
+            </div>
+            <div class="product-card-exact">
+                <span class="product-number-badge">02</span>
+                <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                <div class="product-img-wrap">
+                    <img src="{% static 'images/ceramica.png' %}" alt="Cuenco Cerámico Tradicional">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Cuenco Cerámico Tradicional</h3>
+                    <p class="product-artisan">Artesano: Luis Yalanda</p>
+                    <p class="product-price">$85.000 COP</p>
+                    <p class="product-stock">Stock: 12 unidades</p>
+                    <a href="{% url 'shop' %}" class="btn-buy">
+                        <i class="bi bi-cart"></i> COMPRAR
+                    </a>
+                </div>
+            </div>
+            <div class="product-card-exact">
+                <span class="product-number-badge">03</span>
+                <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                <div class="product-img-wrap">
+                    <img src="{% static 'images/tapiz.png' %}" alt="Tapiz Yanacona">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Tapiz Yanacona</h3>
+                    <p class="product-artisan">Artesana: Rosa Pillimue</p>
+                    <p class="product-price">$150.000 COP</p>
+                    <p class="product-stock">Stock: 5 unidades</p>
+                    <a href="{% url 'shop' %}" class="btn-buy">
+                        <i class="bi bi-cart"></i> COMPRAR
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+    <div class="trust-inner">
+        <div class="trust-item">
+            <i class="bi bi-truck"></i>
+            <span>Envíos a todo Colombia</span>
+        </div>
+        <div class="trust-item">
+            <i class="bi bi-shield-check"></i>
+            <span>Pagos 100% seguros</span>
+        </div>
+        <div class="trust-item">
+            <i class="bi bi-people"></i>
+            <span>Apoya el comercio justo</span>
+        </div>
+        <div class="trust-item">
+            <i class="bi bi-heart"></i>
+            <span>Hecho con amor y tradición</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

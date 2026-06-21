@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Categorías — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-tags"></i> Gestión de Categorías</h1>
+        <p class="page-subtitle-exact">Administra las categorías de productos</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="margin-bottom:1.5rem;">
+            <a href="{% url 'admin_add_category' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nueva Categoría</a>
+        </div>
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if categories %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th>Nombre</th><th>Slug</th><th>Descripción</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for cat in categories %}
+                        <tr>
+                            <td><strong>{{ cat.name }}</strong></td>
+                            <td>{{ cat.slug }}</td>
+                            <td>{{ cat.description|truncatechars:50|default:"Sin descripción" }}</td>
+                            <td><a href="{% url 'admin_edit_category' cat.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i> Editar</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}<p style="color:var(--color-text-light);">No hay categorías registradas.</p>{% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

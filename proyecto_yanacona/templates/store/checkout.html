@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Checkout — O'NEL Artesanías{% endblock %}
+
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact">Finalizar Compra</h1>
+        <p class="page-subtitle-exact">Completa tus datos de envío</p>
+    </div>
+</section>
+
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;">Datos de Envío</h4>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre completo</label>
+                            <input type="text" name="shipping_name" class="form-control-exact" value="{{ user.name }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Dirección</label>
+                            <textarea name="shipping_address" class="form-control-exact" rows="2" required>{{ user.address }}</textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Ciudad</label>
+                                <input type="text" name="shipping_city" class="form-control-exact" value="{{ user.city }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Teléfono</label>
+                                <input type="text" name="shipping_phone" class="form-control-exact" value="{{ user.phone }}" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Notas adicionales</label>
+                            <textarea name="notes" class="form-control-exact" rows="2" placeholder="Instrucciones especiales de entrega..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary-exact" style="width:100%;">Confirmar Pedido</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart-summary-exact">
+                    <h5 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;">Resumen</h5>
+                    {% for item in items %}
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.9rem;">
+                        <span style="color:var(--color-text-light);">{{ item.product.name }} x{{ item.quantity }}</span>
+                        <span style="font-weight:600;">{{ item.subtotal|format_price }}</span>
+                    </div>
+                    {% endfor %}
+                    <hr style="border-color:var(--color-border); margin:1rem 0;">
+                    <div class="d-flex justify-content-between mb-2" style="font-size:0.9rem;">
+                        <span style="color:var(--color-text-light);">Envío</span>
+                        <span style="color:var(--color-accent-green); font-weight:600;">Gratis</span>
+                    </div>
+                    <hr style="border-color:var(--color-border); margin:1rem 0;">
+                    <div class="d-flex justify-content-between">
+                        <span style="font-weight:700;">Total</span>
+                        <span style="font-weight:700; font-size:1.3rem; color:var(--color-accent-green);">{{ total|format_price }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

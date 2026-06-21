@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Pedidos — Panel Admin{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-bag"></i> Gestión de Pedidos</h1>
+        <p class="page-subtitle-exact">Todas las órdenes de la tienda</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="margin-bottom:1.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <a href="{% url 'admin_orders' %}" class="btn-sm {% if not status_filter %}btn-primary-exact{% else %}btn-outline-exact{% endif %}" style="padding:0.4rem 1rem;">Todos</a>
+            <a href="{% url 'admin_orders' %}?status=pending" class="btn-sm {% if status_filter == 'pending' %}btn-primary-exact{% else %}btn-outline-exact{% endif %}" style="padding:0.4rem 1rem;">Pendientes</a>
+            <a href="{% url 'admin_orders' %}?status=processing" class="btn-sm {% if status_filter == 'processing' %}btn-primary-exact{% else %}btn-outline-exact{% endif %}" style="padding:0.4rem 1rem;">En proceso</a>
+            <a href="{% url 'admin_orders' %}?status=shipped" class="btn-sm {% if status_filter == 'shipped' %}btn-primary-exact{% else %}btn-outline-exact{% endif %}" style="padding:0.4rem 1rem;">Enviados</a>
+            <a href="{% url 'admin_orders' %}?status=delivered" class="btn-sm {% if status_filter == 'delivered' %}btn-primary-exact{% else %}btn-outline-exact{% endif %}" style="padding:0.4rem 1rem;">Entregados</a>
+            <a href="{% url 'admin_orders' %}?status=cancelled" class="btn-sm {% if status_filter == 'cancelled' %}btn-primary-exact{% else %}btn-outline-exact{% endif %}" style="padding:0.4rem 1rem;">Cancelados</a>
+        </div>
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th># Orden</th><th>Cliente</th><th>Email</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><strong>#{{ order.id }}</strong></td>
+                            <td>{{ order.shipping_name|default:"Anónimo" }}</td>
+                            <td>{{ order.user.email|default:"Invitado" }}</td>
+                            <td>{{ order.total|format_price }}</td>
+                            <td><span class="badge" style="background:{% if order.status == 'delivered' %}#28a745{% elif order.status == 'pending' %}#ffc107{% elif order.status == 'cancelled' %}#dc3545{% else %}#17a2b8{% endif %}; color:{% if order.status == 'pending' %}#333{% else %}white{% endif %}; padding:0.3rem 0.6rem; border-radius:12px; font-size:0.75rem;">{{ order.get_status_display }}</span></td>
+                            <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                            <td><a href="{% url 'admin_order_detail' order.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-eye"></i> Ver</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-bag-x" style="font-size:3rem; color:var(--color-text-light);"></i>
+                <p style="color:var(--color-text-light); margin-top:1rem;">No hay pedidos{% if status_filter %} con este estado{% endif %}.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
