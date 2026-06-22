@@ -21,6 +21,11 @@
                         <input type="text" name="name" class="form-control-exact" value="{{ category.name }}" required>
                     </div>
                     <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Slug (URL) *</label>
+                        <input type="text" name="slug" class="form-control-exact" value="{{ category.slug }}" required placeholder="Ej: cesteria">
+                        <small style="color:var(--color-text-light); font-size:0.75rem;">URL amigable para la categoría</small>
+                    </div>
+                    <div class="mb-3">
                         <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Descripción</label>
                         <textarea name="description" class="form-control-exact" rows="3">{{ category.description }}</textarea>
                     </div>
