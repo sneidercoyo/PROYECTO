@@ -1,21 +1,69 @@
-{% extends 'base.html' %}{% load static %}{% block title %}Mis Productos — Artesano{% endblock %}
-{% block content %}<div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
-<h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-box-seam"></i> Mis Productos</h1>
-<p style="color:#8a7a6b;margin-bottom:1.5rem;">{{ artisan.name }} — {{ artisan.specialty }}</p>
-<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
-<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-speedometer2"></i> Dashboard</a>
-<a href="{% url 'artisan_products' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-box-seam"></i> Mis Productos</a>
-<a href="{% url 'artisan_add_product' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
-<a href="{% url 'artisan_orders' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-bag"></i> Pedidos</a>
-<a href="{% url 'artisan_stock' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-boxes"></i> Inventario</a>
-<a href="{% url 'artisan_stats' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-graph-up"></i> Estadísticas</a></div>
-{% if products %}<table style="width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-collapse:collapse;">
-<thead><tr style="background:#2c1810;color:#fff;"><th style="padding:1rem;text-align:left;font-size:0.85rem;">Producto</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Categoría</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Precio</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Stock</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Estado</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Acciones</th></tr></thead>
-<tbody>{% for p in products %}<tr style="border-bottom:1px solid #e8ddd4;">
-<td style="padding:1rem;"><strong>{{ p.name }}</strong>{% if p.is_on_sale %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#fff3cd;color:#856404;margin-left:0.5rem;">-{{ p.discount_percent }}%</span>{% endif %}{% if p.featured %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#d1ecf1;color:#0c5460;margin-left:0.5rem;">Destacado</span>{% endif %}</td>
-<td style="padding:1rem;">{{ p.category.name|default:"Sin categoría" }}</td>
-<td style="padding:1rem;">{% if p.is_on_sale %}<span style="text-decoration:line-through;color:#999;font-size:0.85rem;">${{ p.price|floatformat:0 }}</span> <span style="color:#c75c2e;font-weight:700;">${{ p.sale_price|floatformat:0 }}</span>{% else %}${{ p.price|floatformat:0 }}{% endif %}</td>
-<td style="padding:1rem;">{% if p.stock == 0 %}<span style="color:#721c24;font-weight:600;">{{ p.stock }}</span>{% elif p.stock <= 5 %}<span style="color:#856404;font-weight:600;">{{ p.stock }}</span>{% else %}{{ p.stock }}{% endif %}</td>
-<td style="padding:1rem;">{% if p.active %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#d4edda;color:#155724;">Activo</span>{% else %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#f8d7da;color:#721c24;">Inactivo</span>{% endif %}</td>
-<td style="padding:1rem;"><a href="{% url 'artisan_edit_product' p.id %}" style="padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;text-decoration:none;background:#e8ddd4;color:#2c1810;"><i class="bi bi-pencil"></i></a> <a href="{% url 'artisan_toggle_product' p.id %}" style="padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;text-decoration:none;background:#d4edda;color:#155724;"><i class="bi bi-power"></i></a> <a href="{% url 'artisan_delete_product' p.id %}" style="padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;text-decoration:none;background:#f8d7da;color:#721c24;" onclick="return confirm('¿Eliminar este producto?')"><i class="bi bi-trash"></i></a></td></tr>{% endfor %}</tbody></table>
-{% else %}<div style="text-align:center;padding:3rem;color:#8a7a6b;"><i class="bi bi-box" style="font-size:3rem;display:block;margin-bottom:1rem;"></i><p>No tienes productos aún.</p><a href="{% url 'artisan_add_product' %}" style="background:#c75c2e;color:#fff;padding:0.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:600;"><i class="bi bi-plus-lg"></i> Crear primer producto</a></div>{% endif %}</div>{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mis Productos — Panel Artesano{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-box-seam"></i> Mis Productos</h1>
+        <p class="page-subtitle-exact">Gestiona todos tus productos, precios, descuentos e inventario</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
+            <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
+            <a href="{% url 'artisan_stock' %}" class="btn-outline-exact"><i class="bi bi-boxes"></i> Inventario</a>
+        </div>
+        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+            {% if products %}
+            <div class="table-responsive">
+                <table class="table-exact">
+                    <thead><tr><th>Producto</th><th>Precio</th><th>Descuento</th><th>Stock</th><th>Categoría</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>
+                                <div style="display:flex; align-items:center; gap:0.75rem;">
+                                    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);">
+                                    {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
+                                    <span>{{ product.name }}</span>
+                                </div>
+                            </td>
+                            <td>${{ product.price|floatformat:0 }}</td>
+                            <td>
+                                {% if product.discount_price %}
+                                <span style="color:#dc3545; font-weight:600;">${{ product.discount_price|floatformat:0 }}</span>
+                                {% else %}
+                                <span style="color:var(--color-text-light);">-</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ product.stock }}</td>
+                            <td>{{ product.category.name|default:"Sin categoría" }}</td>
+                            <td>
+                                <a href="{% url 'artisan_toggle_product' product.id %}" style="text-decoration:none;">
+                                    <span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem; cursor:pointer;">
+                                        {% if product.active %}Activo{% else %}Inactivo{% endif %}
+                                    </span>
+                                </a>
+                            </td>
+                            <td>{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
+                            <td>
+                                <a href="{% url 'artisan_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4); margin-right:0.5rem;"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'artisan_delete_product' product.id %}" class="btn-sm" style="color:#dc3545;" onclick="return confirm('¿Eliminar este producto permanentemente?')"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-box-seam" style="font-size:3rem; color:var(--color-text-light);"></i>
+                <p style="color:var(--color-text-light); margin-top:1rem;">No tienes productos aún.</p>
+                <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Primer Producto</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

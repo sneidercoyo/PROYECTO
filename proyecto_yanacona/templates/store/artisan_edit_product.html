@@ -1,25 +1,82 @@
-{% extends 'base.html' %}{% load static %}{% block title %}Editar Producto — Artesano{% endblock %}
-{% block content %}<div style="max-width:700px;margin:0 auto;padding:2rem 1rem;">
-<h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-pencil"></i> Editar Producto</h1>
-<p style="color:#8a7a6b;margin-bottom:1.5rem;">{{ product.name }}</p>
-<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
-<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-speedometer2"></i> Dashboard</a>
-<a href="{% url 'artisan_products' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-box-seam"></i> Mis Productos</a>
-<a href="{% url 'artisan_add_product' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-plus-lg"></i> Nuevo Producto</a></div>
-<div style="background:#fff;border-radius:12px;padding:2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;">
-{% if product.image %}<div style="margin-bottom:1.5rem;text-align:center;"><img src="{{ product.image.url }}" style="max-width:200px;border-radius:8px;"></div>{% endif %}
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Nombre del producto *</label><input type="text" name="name" value="{{ product.name }}" required style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Descripción</label><textarea name="description" rows="4" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;resize:vertical;">{{ product.description }}</textarea></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-<div><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Precio (COP) *</label><input type="number" name="price" value="{{ product.price }}" required min="0" step="0.01" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Precio de descuento</label><input type="number" name="discount_price" value="{{ product.discount_price|default:'' }}" min="0" step="0.01" placeholder="Dejar vacío si no aplica" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-<div><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Stock *</label><input type="number" name="stock" value="{{ product.stock }}" required min="0" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Categoría</label><select name="category" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"><option value="">Sin categoría</option>{% for cat in categories %}<option value="{{ cat.id }}" {% if product.category_id == cat.id %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}</select></div></div>
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Cambiar imagen</label><input type="file" name="image" accept="image/*" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div style="display:flex;gap:1.5rem;margin-bottom:1.5rem;">
-<label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;"><input type="checkbox" name="featured" {% if product.featured %}checked{% endif %}> <span style="font-size:0.9rem;">Destacar en tienda</span></label>
-<label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;"><input type="checkbox" name="active" {% if product.active %}checked{% endif %}> <span style="font-size:0.9rem;">Activo</span></label></div>
-<button type="submit" style="width:100%;padding:0.9rem;background:#c75c2e;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
-</form></div></div>{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Editar Producto — Panel Artesano{% endblock %}
+{% block content %}
+<section class="page-header-exact">
+    <div class="container-exact">
+        <h1 class="page-title-exact"><i class="bi bi-pencil"></i> Editar Producto</h1>
+        <p class="page-subtitle-exact">{{ product.name }}</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:750px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                {% if product.image %}
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:200px; max-height:200px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+                    <p style="color:var(--color-text-light); font-size:0.8rem; margin-top:0.5rem;">Imagen actual</p>
+                </div>
+                {% endif %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre del producto *</label>
+                        <input type="text" name="name" class="form-control-exact" required value="{{ product.name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Descripción</label>
+                        <textarea name="description" class="form-control-exact" rows="4">{{ product.description }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Precio (COP) *</label>
+                            <input type="number" name="price" class="form-control-exact" required min="0" step="0.01" value="{{ product.price }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Precio Descuento (COP)</label>
+                            <input type="number" name="discount_price" class="form-control-exact" min="0" step="0.01" value="{{ product.discount_price|default:'' }}">
+                            <small style="color:var(--color-text-light); font-size:0.75rem;">Dejar vacío si no aplica</small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Stock *</label>
+                            <input type="number" name="stock" class="form-control-exact" required min="0" value="{{ product.stock }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Cambiar imagen</label>
+                        <input type="file" name="image" class="form-control-exact" accept="image/*">
+                        <small style="color:var(--color-text-light); font-size:0.75rem;">Dejar vacío para mantener la imagen actual</small>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Categoría</label>
+                        <select name="category" class="form-control-exact">
+                            <option value="">-- Selecciona --</option>
+                            {% for cat in categories %}<option value="{{ cat.id }}" {% if product.category and product.category.id == cat.id %}selected{% endif %}>{{ cat.name }}</option>{% endfor %}
+                        </select>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                                <input type="checkbox" name="featured" {% if product.featured %}checked{% endif %} style="width:18px; height:18px;">
+                                <span style="font-size:0.85rem; font-weight:600;">Destacar en inicio</span>
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                                <input type="checkbox" name="active" {% if product.active %}checked{% endif %} style="width:18px; height:18px;">
+                                <span style="font-size:0.85rem; font-weight:600;">Activo</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                        <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
+                        <a href="{% url 'artisan_products' %}" class="btn-outline-exact">Cancelar</a>
+                        <a href="{% url 'artisan_delete_product' product.id %}" class="btn-outline-exact" style="border-color:#dc3545; color:#dc3545;" onclick="return confirm('¿Eliminar este producto permanentemente?')"><i class="bi bi-trash"></i> Eliminar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

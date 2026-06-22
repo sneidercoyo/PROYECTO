@@ -1,22 +1,71 @@
-{% extends 'base.html' %}{% load static %}{% block title %}Editar Perfil — Artesano{% endblock %}
-{% block content %}<div style="max-width:700px;margin:0 auto;padding:2rem 1rem;">
-<h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-pencil"></i> Editar Perfil</h1>
-<p style="color:#8a7a6b;margin-bottom:1.5rem;">Actualiza tu información personal y de artesano</p>
-<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
-<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-speedometer2"></i> Dashboard</a>
-<a href="{% url 'artisan_profile' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-person"></i> Mi Perfil</a>
-<a href="{% url 'artisan_edit_profile' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-pencil"></i> Editar Perfil</a></div>
-<div style="background:#fff;border-radius:12px;padding:2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;">
-{% if artisan.image %}<div style="text-align:center;margin-bottom:1.5rem;"><img src="{{ artisan.image.url }}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #c75c2e;"></div>{% endif %}
-<form method="post" enctype="multipart/form-data">{% csrf_token %}
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Nombre completo *</label><input type="text" name="name" value="{{ artisan.name }}" required style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Especialidad</label><input type="text" name="specialty" value="{{ artisan.specialty }}" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Biografía</label><textarea name="bio" rows="5" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;resize:vertical;">{{ artisan.bio }}</textarea></div>
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Foto de perfil</label><input type="file" name="image" accept="image/*" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div style="margin-bottom:1rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Correo electrónico</label><input type="email" name="email" value="{{ user.email|default:'' }}" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
-<div><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Teléfono</label><input type="text" name="phone" value="{{ user.phone }}" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div>
-<div><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Ciudad</label><input type="text" name="city" value="{{ user.city }}" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;"></div></div>
-<div style="margin-bottom:1.5rem;"><label style="display:block;font-size:0.85rem;font-weight:600;margin-bottom:0.4rem;">Dirección</label><textarea name="address" rows="2" style="width:100%;padding:0.7rem;border:1px solid #e8ddd4;border-radius:8px;font-size:0.95rem;resize:vertical;">{{ user.address }}</textarea></div>
-<label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;margin-bottom:1.5rem;"><input type="checkbox" name="active" {% if artisan.active %}checked{% endif %}> <span style="font-size:0.9rem;">Perfil activo en la tienda</span></label>
-<button type="submit" style="width:100%;padding:0.9rem;background:#c75c2e;color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;"><i class="bi bi-check-lg"></i> Guardar Cambios</button></form></div></div>{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Editar Perfil — Panel Artesano{% endblock %}
+{% block content %}
+<section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-3), var(--color-rainbow-4));">
+    <div class="container-exact">
+        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-pencil-square"></i> Editar Perfil</h1>
+        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Actualiza tu información personal y de artesano</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div style="max-width:750px; margin:0 auto;">
+            <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                {% if artisan.image %}
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <img src="{{ artisan.image.url }}" alt="{{ artisan.name }}" style="width:100px; height:100px; object-fit:cover; border-radius:50%; border:3px solid var(--color-rainbow-2);">
+                </div>
+                {% endif %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h5 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1rem; color:var(--color-rainbow-4);"><i class="bi bi-person"></i> Datos Personales</h5>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre completo *</label>
+                        <input type="text" name="name" class="form-control-exact" required value="{{ user.name }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Teléfono</label>
+                            <input type="text" name="phone" class="form-control-exact" value="{{ user.phone|default:'' }}" placeholder="Ej: 310 123 4567">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Ciudad</label>
+                            <input type="text" name="city" class="form-control-exact" value="{{ user.city|default:'' }}" placeholder="Ej: Puerto Caicedo">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Dirección</label>
+                        <textarea name="address" class="form-control-exact" rows="2" placeholder="Tu dirección de contacto">{{ user.address|default:'' }}</textarea>
+                    </div>
+                    <hr style="margin:1.5rem 0; border-color:var(--color-border);">
+                    <h5 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1rem; color:var(--color-rainbow-4);"><i class="bi bi-shop"></i> Perfil de Artesano</h5>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Especialidad</label>
+                        <input type="text" name="specialty" class="form-control-exact" value="{{ artisan.specialty|default:'' }}" placeholder="Ej: Cestería, Tejido, Cerámica...">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Biografía</label>
+                        <textarea name="bio" class="form-control-exact" rows="4" placeholder="Cuéntanos tu historia como artesano, tu proceso de elaboración, tradición familiar...">{{ artisan.bio|default:'' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Foto de perfil</label>
+                        <input type="file" name="image" class="form-control-exact" accept="image/*">
+                        <small style="color:var(--color-text-light); font-size:0.75rem;">Dejar vacío para mantener la foto actual</small>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                            <input type="checkbox" name="active" {% if artisan.active %}checked{% endif %} style="width:18px; height:18px;">
+                            <span style="font-size:0.85rem; font-weight:600;">Perfil activo (visible en la tienda)</span>
+                        </label>
+                    </div>
+                    <div style="display:flex; gap:1rem;">
+                        <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
+                        <a href="{% url 'artisan_profile' %}" class="btn-outline-exact">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

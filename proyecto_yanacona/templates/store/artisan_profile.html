@@ -1,19 +1,62 @@
-{% extends 'base.html' %}{% load static %}{% block title %}Mi Perfil — Artesano{% endblock %}
-{% block content %}<div style="max-width:700px;margin:0 auto;padding:2rem 1rem;">
-<h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-person"></i> Mi Perfil</h1>
-<p style="color:#8a7a6b;margin-bottom:1.5rem;">Información de tu cuenta y perfil de artesano</p>
-<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
-<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-speedometer2"></i> Dashboard</a>
-<a href="{% url 'artisan_profile' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-person"></i> Mi Perfil</a>
-<a href="{% url 'artisan_edit_profile' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-pencil"></i> Editar Perfil</a></div>
-<div style="background:#fff;border-radius:12px;padding:2rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;text-align:center;">
-{% if artisan.image %}<img src="{{ artisan.image.url }}" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #c75c2e;margin-bottom:1rem;">
-{% else %}<div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#c75c2e,#e8a87c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:3rem;font-weight:700;margin:0 auto 1rem;">{{ artisan.name|first }}</div>{% endif %}
-<h2 style="margin:0;color:#2c1810;">{{ artisan.name }}</h2>
-<p style="color:#8a7a6b;margin:0.5rem 0;"><i class="bi bi-briefcase"></i> {{ artisan.specialty|default:"Artesano" }}</p>
-<p style="color:#8a7a6b;margin:0.5rem 0;"><i class="bi bi-envelope"></i> {{ user.email|default:"Sin correo" }}</p>
-<p style="color:#8a7a6b;margin:0.5rem 0;"><i class="bi bi-telephone"></i> {{ user.phone|default:"Sin teléfono" }}</p>
-<p style="color:#8a7a6b;margin:0.5rem 0;"><i class="bi bi-geo-alt"></i> {{ user.city|default:"Sin ciudad" }}</p>
-<div style="margin-top:1.5rem;padding:1.5rem;background:#f8f5f2;border-radius:8px;text-align:left;">
-<h3 style="margin-top:0;color:#2c1810;font-size:1rem;">Biografía</h3>
-<p style="color:#5a4a3a;line-height:1.6;margin:0;">{{ artisan.bio|default:"No has agregado una biografía aún."|linebreaks }}</p></div></div></div>{% endblock %}
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mi Perfil — Panel Artesano{% endblock %}
+{% block content %}
+<section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-3), var(--color-rainbow-4));">
+    <div class="container-exact">
+        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-person-circle"></i> Mi Perfil</h1>
+        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Información de tu cuenta y perfil de artesano</p>
+    </div>
+</section>
+<section class="section-padding">
+    <div class="section-inner">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft); text-align:center;">
+                    {% if artisan.image %}
+                    <img src="{{ artisan.image.url }}" alt="{{ artisan.name }}" style="width:120px; height:120px; object-fit:cover; border-radius:50%; border:3px solid var(--color-rainbow-2); margin-bottom:1rem;">
+                    {% else %}
+                    <div style="width:120px; height:120px; background:var(--color-cream); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem auto; border:3px solid var(--color-rainbow-2);">
+                        <i class="bi bi-person" style="font-size:3rem; color:var(--color-text-light);"></i>
+                    </div>
+                    {% endif %}
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700;">{{ artisan.name }}</h4>
+                    <p style="color:var(--color-text-light); font-size:0.85rem;"><i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i> {{ artisan.specialty|default:"Artesano" }}</p>
+                    <a href="{% url 'artisan_edit_profile' %}" class="btn-primary-exact" style="margin-top:1rem;"><i class="bi bi-pencil"></i> Editar Perfil</a>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft); margin-bottom:1.5rem;">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;"><i class="bi bi-person"></i> Datos Personales</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label style="font-size:0.8rem; color:var(--color-text-light); font-weight:600;">Nombre completo</label>
+                            <p style="font-weight:600; margin-bottom:0;">{{ user.name }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="font-size:0.8rem; color:var(--color-text-light); font-weight:600;">Correo electrónico</label>
+                            <p style="font-weight:600; margin-bottom:0;">{{ user.email|default:"No especificado" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="font-size:0.8rem; color:var(--color-text-light); font-weight:600;">Teléfono</label>
+                            <p style="font-weight:600; margin-bottom:0;">{{ user.phone|default:"No especificado" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="font-size:0.8rem; color:var(--color-text-light); font-weight:600;">Ciudad</label>
+                            <p style="font-weight:600; margin-bottom:0;">{{ user.city|default:"No especificada" }}</p>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label style="font-size:0.8rem; color:var(--color-text-light); font-weight:600;">Dirección</label>
+                            <p style="font-weight:600; margin-bottom:0;">{{ user.address|default:"No especificada" }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1rem;"><i class="bi bi-info-circle"></i> Biografía</h4>
+                    <p style="color:var(--color-text-light); line-height:1.6;">{{ artisan.bio|default:"No has agregado una biografía aún. Edita tu perfil para contar tu historia como artesano." }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

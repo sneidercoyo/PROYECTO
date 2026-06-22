@@ -170,21 +170,29 @@ def login_view(request):
     if request.method == 'POST':
         identifier = request.POST.get('email')
         password = request.POST.get('password')
+
         user = authenticate_user(identifier, password)
+
         if user:
             request.session['user_id'] = user.id
             request.session['user_name'] = user.name
             request.session['user_role'] = user.role
             messages.success(request, f"Bienvenido, {user.name}!")
-            # REDIRIGIR SEGÚN ROL
+
+            # Redirigir según rol
             if user.is_admin():
                 return redirect('admin_dashboard')
             elif user.is_artisan():
+                # Buscar y guardar el artisan_id en sesión
+                artisan = Artisan.objects.filter(name__icontains=user.name.split()[0]).first()
+                if artisan:
+                    request.session['artisan_id'] = artisan.id
                 return redirect('artisan_dashboard')
             else:
                 return redirect('home')
         else:
             messages.error(request, "Usuario o contraseña incorrectos.")
+
     return render(request, 'store/login.html')
 
 
