@@ -1,42 +1,60 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Categorías — Panel Admin<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
-            <a href="{% url 'admin_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
-        </div>{% endblock %}
+{% block title %}Categorías — Panel Admin{% endblock %}
 {% block content %}
 <section class="page-header-exact">
     <div class="container-exact" style="text-align:center;">
-        <h1 class="page-title-exact"><i class="bi bi-tags"></i> Gestión de Categorías</h1>
-        <p class="page-subtitle-exact">Administra las categorías de productos</p>
+        <h1 class="page-title-exact"><i class="bi bi-tags"></i> Categorías</h1>
+        <p class="page-subtitle-exact">Gestiona las categorías de la tienda</p>
     </div>
 </section>
 <section class="section-padding">
     <div class="section-inner">
-        <div style="margin-bottom:1.5rem;">
+        <div style="margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
             <a href="{% url 'admin_add_category' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nueva Categoría</a>
         </div>
         <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
             {% if categories %}
             <div class="table-responsive">
-                <table class="table-exact">
-                    <thead><tr><th>Nombre</th><th>Slug</th><th>Descripción</th><th>Acciones</th></tr></thead>
-                    <tbody>
-                        {% for cat in categories %}
+                <table class="table-exact" style="width:100%; border-collapse:separate; border-spacing:0;">
+                    <thead>
                         <tr>
-                            <td><strong>{{ cat.name }}</strong></td>
-                            <td>{{ cat.slug }}</td>
-                            <td>{{ cat.description|truncatechars:50|default:"Sin descripción" }}</td>
-                            <td><a href="{% url 'admin_edit_category' cat.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i> Editar</a></td>
+                            <th style="min-width:80px; padding:0.75rem; text-align:center;">ID</th>
+                            <th style="min-width:150px; padding:0.75rem; text-align:left;">Nombre</th>
+                            <th style="min-width:150px; padding:0.75rem; text-align:left;">Slug</th>
+                            <th style="min-width:200px; padding:0.75rem; text-align:left;">Descripción</th>
+                            <th style="min-width:100px; padding:0.75rem; text-align:center;">Productos</th>
+                            <th style="min-width:120px; padding:0.75rem; text-align:center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for category in categories %}
+                        <tr style="border-bottom:1px solid var(--color-border);">
+                            <td style="padding:0.75rem; text-align:center;">{{ category.id }}</td>
+                            <td style="padding:0.75rem; font-weight:600;">{{ category.name }}</td>
+                            <td style="padding:0.75rem;"><code style="background:var(--color-cream); padding:0.2rem 0.4rem; border-radius:4px; font-size:0.8rem;">{{ category.slug }}</code></td>
+                            <td style="padding:0.75rem; color:var(--color-text-light);">{{ category.description|truncatechars:50|default:"Sin descripción" }}</td>
+                            <td style="padding:0.75rem; text-align:center; font-weight:600;">{{ category.product_count|default:0 }}</td>
+                            <td style="padding:0.75rem; text-align:center;">
+                                <a href="{% url 'admin_edit_category' category.id %}" style="color:var(--color-rainbow-4); margin-right:0.5rem; font-size:1.1rem;"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'admin_delete_category' category.id %}" style="color:#dc3545; font-size:1.1rem;" onclick="return confirm('¿Eliminar esta categoría?')"><i class="bi bi-trash"></i></a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-            {% else %}<p style="color:var(--color-text-light);">No hay categorías registradas.</p>{% endif %}
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-tags" style="font-size:3rem; color:var(--color-text-light);"></i>
+                <p style="color:var(--color-text-light); margin-top:1rem;">No hay categorías aún.</p>
+                <a href="{% url 'admin_add_category' %}" class="btn-primary-exact mt-2">Crear Primera Categoría</a>
+            </div>
+            {% endif %}
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
         </div>
     </div>
 </section>
-<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
-            <a href="{% url 'admin_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
-        </div>
 {% endblock %}

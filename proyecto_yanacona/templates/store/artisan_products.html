@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mis Productos — Panel Artesano<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
-            <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
-        </div>{% endblock %}
+{% block title %}Mis Productos — Panel Artesano{% endblock %}
 {% block content %}
 <section class="page-header-exact">
     <div class="container-exact" style="text-align:center;">
@@ -19,39 +17,50 @@
         <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
             {% if products %}
             <div class="table-responsive">
-                <table class="table-exact">
-                    <thead><tr><th>Producto</th><th>Precio</th><th>Descuento</th><th>Stock</th><th>Categoría</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
+                <table class="table-exact" style="width:100%; border-collapse:separate; border-spacing:0;">
+                    <thead>
+                        <tr>
+                            <th style="min-width:200px; padding:0.75rem; text-align:left;">Producto</th>
+                            <th style="min-width:100px; padding:0.75rem; text-align:center;">Precio</th>
+                            <th style="min-width:100px; padding:0.75rem; text-align:center;">Descuento</th>
+                            <th style="min-width:70px; padding:0.75rem; text-align:center;">Stock</th>
+                            <th style="min-width:120px; padding:0.75rem; text-align:center;">Categoría</th>
+                            <th style="min-width:80px; padding:0.75rem; text-align:center;">Estado</th>
+                            <th style="min-width:80px; padding:0.75rem; text-align:center;">Destacado</th>
+                            <th style="min-width:100px; padding:0.75rem; text-align:center;">Acciones</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {% for product in products %}
-                        <tr>
-                            <td>
+                        <tr style="border-bottom:1px solid var(--color-border);">
+                            <td style="padding:0.75rem;">
                                 <div style="display:flex; align-items:center; gap:0.75rem;">
-                                    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);">
-                                    {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
-                                    <span>{{ product.name }}</span>
+                                    {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm); flex-shrink:0;">
+                                    {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
+                                    <a href="{% url 'product_detail' product.slug %}" style="color:var(--color-text); text-decoration:none; font-weight:600;">{{ product.name }}</a>
                                 </div>
                             </td>
-                            <td>${{ product.price|floatformat:0 }}</td>
-                            <td>
+                            <td style="padding:0.75rem; text-align:center; white-space:nowrap; font-weight:600;">${{ product.price|floatformat:0 }}</td>
+                            <td style="padding:0.75rem; text-align:center; white-space:nowrap;">
                                 {% if product.discount_price %}
                                 <span style="color:#dc3545; font-weight:600;">${{ product.discount_price|floatformat:0 }}</span>
                                 {% else %}
                                 <span style="color:var(--color-text-light);">-</span>
                                 {% endif %}
                             </td>
-                            <td>{{ product.stock }}</td>
-                            <td>{{ product.category.name|default:"Sin categoría" }}</td>
-                            <td>
+                            <td style="padding:0.75rem; text-align:center; font-weight:600;">{{ product.stock }}</td>
+                            <td style="padding:0.75rem; text-align:center;">{{ product.category.name|default:"Sin categoría" }}</td>
+                            <td style="padding:0.75rem; text-align:center;">
                                 <a href="{% url 'artisan_toggle_product' product.id %}" style="text-decoration:none;">
-                                    <span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem; cursor:pointer;">
+                                    <span style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.3rem 0.6rem; border-radius:10px; font-size:0.75rem; cursor:pointer; display:inline-block;">
                                         {% if product.active %}Activo{% else %}Inactivo{% endif %}
                                     </span>
                                 </a>
                             </td>
-                            <td>{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
-                            <td>
-                                <a href="{% url 'artisan_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4); margin-right:0.5rem;"><i class="bi bi-pencil"></i></a>
-                                <a href="{% url 'artisan_delete_product' product.id %}" class="btn-sm" style="color:#dc3545;" onclick="return confirm('¿Eliminar este producto permanentemente?')"><i class="bi bi-trash"></i></a>
+                            <td style="padding:0.75rem; text-align:center;">{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
+                            <td style="padding:0.75rem; text-align:center;">
+                                <a href="{% url 'artisan_edit_product' product.id %}" style="color:var(--color-rainbow-4); margin-right:0.5rem; font-size:1.1rem;"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'artisan_delete_product' product.id %}" style="color:#dc3545; font-size:1.1rem;" onclick="return confirm('¿Eliminar este producto permanentemente?')"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -66,9 +75,9 @@
             </div>
             {% endif %}
         </div>
-    </div>
-</section>
-<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
             <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
         </div>
+    </div>
+</section>
 {% endblock %}
