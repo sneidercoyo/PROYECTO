@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Nuevo Artesano — Panel Admin<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+{% block title %}Nuevo Artesano — Panel Admin|div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
             <a href="{% url 'admin_artisans' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Artesanos</a>
         </div>{% endblock %}
 {% block content %}
@@ -20,6 +20,29 @@
                         <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre completo *</label>
                         <input type="text" name="name" class="form-control-exact" required placeholder="Ej: María Yanacona">
                     </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Correo electrónico *</label>
+                        <input type="email" name="email" class="form-control-exact" required placeholder="Ej: maria@yanacona.com">
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Contraseña *</label>
+                        <input type="password" name="password" class="form-control-exact" required placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Teléfono</label>
+                            <input type="text" name="phone" class="form-control-exact" placeholder="Ej: 310 123 4567">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Ciudad</label>
+                            <input type="text" name="city" class="form-control-exact" placeholder="Ej: Puerto Caicedo">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Dirección</label>
+                        <textarea name="address" class="form-control-exact" rows="2" placeholder="Dirección del artesano"></textarea>
+                    </div>
+
                     <div class="mb-3">
                         <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Slug (URL)</label>
                         <input type="text" name="slug" class="form-control-exact" placeholder="Ej: maria-yanacona">
