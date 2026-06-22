@@ -4,13 +4,8 @@
 {% block content %}
 <section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-3), var(--color-rainbow-4));">
     <div class="container-exact">
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
-            <div>
-                <h1 class="page-title-exact" style="color:white;"><i class="bi bi-pencil-square"></i> Editar Perfil</h1>
-                <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Actualiza tu información personal y de artesano</p>
-            </div>
-            <a href="{% url 'artisan_profile' %}" class="btn-outline-exact" style="border-color:white; color:white;"><i class="bi bi-arrow-left"></i> Regresar a Mi Perfil</a>
-        </div>
+        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-pencil-square"></i> Editar Perfil</h1>
+        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Actualiza tu información personal y de artesano</p>
     </div>
 </section>
 <section class="section-padding">
@@ -64,7 +59,7 @@
                             <span style="font-size:0.85rem; font-weight:600;">Perfil activo (visible en la tienda)</span>
                         </label>
                     </div>
-                    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                    <div style="display:flex; gap:1rem;">
                         <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
                         <a href="{% url 'artisan_profile' %}" class="btn-outline-exact">Cancelar</a>
                     </div>

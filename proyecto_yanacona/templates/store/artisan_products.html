@@ -5,19 +5,20 @@
 <section class="page-header-exact">
     <div class="container-exact">
         <h1 class="page-title-exact"><i class="bi bi-box-seam"></i> Mis Productos</h1>
-        <p class="page-subtitle-exact">Gestiona todos tus productos</p>
+        <p class="page-subtitle-exact">Gestiona todos tus productos, precios, descuentos e inventario</p>
     </div>
 </section>
 <section class="section-padding">
     <div class="section-inner">
-        <div style="margin-bottom:1.5rem;">
+        <div style="margin-bottom:1.5rem; display:flex; gap:1rem; flex-wrap:wrap;">
             <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
+            <a href="{% url 'artisan_stock' %}" class="btn-outline-exact"><i class="bi bi-boxes"></i> Inventario</a>
         </div>
         <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
             {% if products %}
             <div class="table-responsive">
                 <table class="table-exact">
-                    <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Categoría</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
+                    <thead><tr><th>Producto</th><th>Precio</th><th>Descuento</th><th>Stock</th><th>Categoría</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
                     <tbody>
                         {% for product in products %}
                         <tr>
@@ -28,12 +29,28 @@
                                     <span>{{ product.name }}</span>
                                 </div>
                             </td>
-                            <td>${{ product.price }}</td>
+                            <td>${{ product.price|floatformat:0 }}</td>
+                            <td>
+                                {% if product.discount_price %}
+                                <span style="color:#dc3545; font-weight:600;">${{ product.discount_price|floatformat:0 }}</span>
+                                {% else %}
+                                <span style="color:var(--color-text-light);">-</span>
+                                {% endif %}
+                            </td>
                             <td>{{ product.stock }}</td>
                             <td>{{ product.category.name|default:"Sin categoría" }}</td>
-                            <td><span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{% if product.active %}Activo{% else %}Inactivo{% endif %}</span></td>
+                            <td>
+                                <a href="{% url 'artisan_toggle_product' product.id %}" style="text-decoration:none;">
+                                    <span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem; cursor:pointer;">
+                                        {% if product.active %}Activo{% else %}Inactivo{% endif %}
+                                    </span>
+                                </a>
+                            </td>
                             <td>{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
-                            <td><a href="{% url 'artisan_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i> Editar</a></td>
+                            <td>
+                                <a href="{% url 'artisan_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4); margin-right:0.5rem;"><i class="bi bi-pencil"></i></a>
+                                <a href="{% url 'artisan_delete_product' product.id %}" class="btn-sm" style="color:#dc3545;" onclick="return confirm('¿Eliminar este producto permanentemente?')"><i class="bi bi-trash"></i></a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -43,7 +60,7 @@
             <div class="text-center py-5">
                 <i class="bi bi-box-seam" style="font-size:3rem; color:var(--color-text-light);"></i>
                 <p style="color:var(--color-text-light); margin-top:1rem;">No tienes productos aún.</p>
-                <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Producto</a>
+                <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Primer Producto</a>
             </div>
             {% endif %}
         </div>

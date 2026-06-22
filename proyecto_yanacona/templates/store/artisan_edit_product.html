@@ -10,9 +10,15 @@
 </section>
 <section class="section-padding">
     <div class="section-inner">
-        <div style="max-width:700px; margin:0 auto;">
+        <div style="max-width:750px; margin:0 auto;">
             <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
-                <form method="post">
+                {% if product.image %}
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width:200px; max-height:200px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--color-border);">
+                    <p style="color:var(--color-text-light); font-size:0.8rem; margin-top:0.5rem;">Imagen actual</p>
+                </div>
+                {% endif %}
+                <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Nombre del producto *</label>
@@ -23,14 +29,24 @@
                         <textarea name="description" class="form-control-exact" rows="4">{{ product.description }}</textarea>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Precio (COP) *</label>
                             <input type="number" name="price" class="form-control-exact" required min="0" step="0.01" value="{{ product.price }}">
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Precio Descuento (COP)</label>
+                            <input type="number" name="discount_price" class="form-control-exact" min="0" step="0.01" value="{{ product.discount_price|default:'' }}">
+                            <small style="color:var(--color-text-light); font-size:0.75rem;">Dejar vacío si no aplica</small>
+                        </div>
+                        <div class="col-md-4 mb-3">
                             <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Stock *</label>
                             <input type="number" name="stock" class="form-control-exact" required min="0" value="{{ product.stock }}">
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Cambiar imagen</label>
+                        <input type="file" name="image" class="form-control-exact" accept="image/*">
+                        <small style="color:var(--color-text-light); font-size:0.75rem;">Dejar vacío para mantener la imagen actual</small>
                     </div>
                     <div class="mb-3">
                         <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Categoría</label>
@@ -53,9 +69,10 @@
                             </label>
                         </div>
                     </div>
-                    <div style="display:flex; gap:1rem;">
+                    <div style="display:flex; gap:1rem; flex-wrap:wrap;">
                         <button type="submit" class="btn-primary-exact"><i class="bi bi-check-lg"></i> Guardar Cambios</button>
                         <a href="{% url 'artisan_products' %}" class="btn-outline-exact">Cancelar</a>
+                        <a href="{% url 'artisan_delete_product' product.id %}" class="btn-outline-exact" style="border-color:#dc3545; color:#dc3545;" onclick="return confirm('¿Eliminar este producto permanentemente?')"><i class="bi bi-trash"></i> Eliminar</a>
                     </div>
                 </form>
             </div>

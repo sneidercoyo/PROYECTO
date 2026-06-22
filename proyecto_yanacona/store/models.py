@@ -12,7 +12,7 @@ class Category(models.Model):
         verbose_name = "Categoría"
         verbose_name_plural = "Categorías"
         ordering = ['name']
-        managed = True  # Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return self.name
@@ -31,7 +31,7 @@ class Artisan(models.Model):
         verbose_name = "Artesano"
         verbose_name_plural = "Artesanos"
         ordering = ['name']
-        managed = True  # Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return self.name
@@ -41,6 +41,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, unique=True, verbose_name="Slug")
     description = models.TextField(blank=True, verbose_name="Descripción")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Precio de descuento")
     stock = models.PositiveIntegerField(default=0, verbose_name="Stock")
     image = models.ImageField(upload_to='products/', blank=True, verbose_name="Imagen")
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Categoría")
@@ -55,13 +56,29 @@ class Product(models.Model):
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ['-created_at']
-        managed = True  # Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return self.name
 
     def formatted_price(self):
         return f"${self.price:,.0f}"
+
+    def sale_price(self):
+        """Retorna el precio de venta actual (descuento si existe, sino precio normal)."""
+        if self.discount_price and self.discount_price > 0 and self.discount_price < self.price:
+            return self.discount_price
+        return self.price
+
+    def is_on_sale(self):
+        """True si el producto tiene descuento activo."""
+        return bool(self.discount_price and self.discount_price > 0 and self.discount_price < self.price)
+
+    def discount_percent(self):
+        """Porcentaje de descuento."""
+        if self.is_on_sale():
+            return round((1 - float(self.discount_price) / float(self.price)) * 100)
+        return 0
 
 class User(models.Model):
     ROLE_CHOICES = [
@@ -84,7 +101,7 @@ class User(models.Model):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
         ordering = ['-created_at']
-        managed = True  # Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return self.name
@@ -132,7 +149,7 @@ class Order(models.Model):
         verbose_name = "Orden"
         verbose_name_plural = "Órdenes"
         ordering = ['-created_at']
-        managed = True  # Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return f"Orden #{self.id}"
@@ -149,7 +166,7 @@ class OrderItem(models.Model):
         db_table = 'order_items'
         verbose_name = "Item de Orden"
         verbose_name_plural = "Items de Orden"
-        managed = True  # Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return f"{self.product_name} x {self.quantity}"
@@ -191,4 +208,4 @@ class CartItem(models.Model):
         return f"{self.product.name} x {self.quantity}"
 
     def subtotal(self):
-        return self.product.price * self.quantity
+        return self.product.sale_price() * self.quantity

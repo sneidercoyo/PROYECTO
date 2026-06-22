@@ -2,10 +2,10 @@
 {% load static %}
 {% block title %}Estadísticas — Panel Artesano{% endblock %}
 {% block content %}
-<section class="page-header-exact">
-    <div class="container-exact" style="text-align:center;">
-        <h1 class="page-title-exact"><i class="bi bi-graph-up"></i> Estadísticas</h1>
-        <p class="page-subtitle-exact">Análisis de tus ventas y productos</p>
+<section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-1), var(--color-rainbow-2));">
+    <div class="container-exact">
+        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-graph-up"></i> Estadísticas</h1>
+        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Rendimiento de tus ventas</p>
     </div>
 </section>
 <section class="section-padding">
@@ -13,30 +13,30 @@
         <div class="row mb-4">
             <div class="col-md-3 mb-3">
                 <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
-                    <i class="bi bi-currency-dollar" style="font-size:2rem; color:var(--color-rainbow-5);"></i>
+                    <i class="bi bi-currency-dollar" style="font-size:2rem; color:var(--color-rainbow-2);"></i>
                     <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">${{ total_revenue|floatformat:0 }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem; margin:0;">Ingresos Totales</p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Ingresos Totales</p>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
                     <i class="bi bi-bag-check" style="font-size:2rem; color:var(--color-rainbow-4);"></i>
                     <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_orders }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem; margin:0;">Pedidos</p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Pedidos</p>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
-                    <i class="bi bi-box-seam" style="font-size:2rem; color:var(--color-rainbow-2);"></i>
+                    <i class="bi bi-box" style="font-size:2rem; color:var(--color-rainbow-3);"></i>
                     <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_sold }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem; margin:0;">Productos Vendidos</p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Productos Vendidos</p>
                 </div>
             </div>
             <div class="col-md-3 mb-3">
                 <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
                     <i class="bi bi-trophy" style="font-size:2rem; color:var(--color-rainbow-1);"></i>
                     <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ top_products|length }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem; margin:0;">Productos en Top</p>
+                    <p style="color:var(--color-text-light); font-size:0.9rem;">Productos en Top</p>
                 </div>
             </div>
         </div>
@@ -47,55 +47,46 @@
                     {% if top_products %}
                     <div class="table-responsive">
                         <table class="table-exact">
-                            <thead><tr><th>Producto</th><th style="min-width:80px; text-align:center;">Vendidos</th><th style="min-width:100px;">Ingresos</th></tr></thead>
+                            <thead><tr><th>Producto</th><th>Vendidos</th><th>Ingresos</th></tr></thead>
                             <tbody>
                                 {% for p in top_products %}
                                 <tr>
                                     <td><strong>{{ p.product__name }}</strong></td>
-                                    <td style="text-align:center; font-weight:600;">{{ p.total_sold }}</td>
-                                    <td style="white-space:nowrap; font-weight:600; color:var(--color-rainbow-5);">${{ p.total_revenue|floatformat:0 }}</td>
+                                    <td>{{ p.total_sold }}</td>
+                                    <td>${{ p.total_revenue|floatformat:0 }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% else %}
-                    <div class="text-center py-4">
-                        <i class="bi bi-trophy" style="font-size:2rem; color:var(--color-text-light);"></i>
-                        <p style="color:var(--color-text-light); margin-top:0.5rem;">Aún no tienes ventas registradas.</p>
-                    </div>
+                    <p style="color:var(--color-text-light); text-align:center;">Aún no tienes ventas registradas.</p>
                     {% endif %}
                 </div>
             </div>
             <div class="col-md-6 mb-4">
                 <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
-                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;"><i class="bi bi-calendar"></i> Ventas por Mes</h4>
+                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;"><i class="bi bi-calendar3"></i> Ventas por Mes</h4>
                     {% if sales_by_month %}
                     <div class="table-responsive">
                         <table class="table-exact">
-                            <thead><tr><th>Mes</th><th style="min-width:80px; text-align:center;">Ventas</th><th style="min-width:100px;">Ingresos</th></tr></thead>
+                            <thead><tr><th>Mes</th><th>Ventas</th><th>Ingresos</th></tr></thead>
                             <tbody>
                                 {% for s in sales_by_month %}
                                 <tr>
                                     <td>{{ s.month|date:"M Y" }}</td>
-                                    <td style="text-align:center; font-weight:600;">{{ s.count }}</td>
-                                    <td style="white-space:nowrap; font-weight:600; color:var(--color-rainbow-5);">${{ s.total|floatformat:0 }}</td>
+                                    <td>{{ s.count }}</td>
+                                    <td>${{ s.total|floatformat:0 }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     {% else %}
-                    <div class="text-center py-4">
-                        <i class="bi bi-calendar" style="font-size:2rem; color:var(--color-text-light);"></i>
-                        <p style="color:var(--color-text-light); margin-top:0.5rem;">Aún no hay datos de ventas por mes.</p>
-                    </div>
+                    <p style="color:var(--color-text-light); text-align:center;">Aún no hay datos de ventas por mes.</p>
                     {% endif %}
                 </div>
             </div>
-        </div>
-        <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
-            <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
         </div>
     </div>
 </section>
