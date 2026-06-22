@@ -1,4 +1,3 @@
-# models.py completo
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password as django_check_password
 
@@ -13,7 +12,7 @@ class Category(models.Model):
         verbose_name = "Categoría"
         verbose_name_plural = "Categorías"
         ordering = ['name']
-        managed = False
+        managed = True  # Django gestiona esta tabla
 
     def __str__(self):
         return self.name
@@ -32,7 +31,7 @@ class Artisan(models.Model):
         verbose_name = "Artesano"
         verbose_name_plural = "Artesanos"
         ordering = ['name']
-        managed = False
+        managed = True  # Django gestiona esta tabla
 
     def __str__(self):
         return self.name
@@ -56,7 +55,7 @@ class Product(models.Model):
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
         ordering = ['-created_at']
-        managed = False
+        managed = True  # Django gestiona esta tabla
 
     def __str__(self):
         return self.name
@@ -71,7 +70,7 @@ class User(models.Model):
         ('admin', 'Administrador'),
     ]
     name = models.CharField(max_length=150, verbose_name="Nombre")
-    email = models.EmailField(max_length=150, unique=True, verbose_name="Correo")
+    email = models.EmailField(max_length=150, unique=True, verbose_name="Correo", blank=True, null=True)
     password = models.CharField(max_length=255, verbose_name="Contraseña")
     phone = models.CharField(max_length=20, blank=True, verbose_name="Teléfono")
     address = models.TextField(blank=True, verbose_name="Dirección")
@@ -85,7 +84,7 @@ class User(models.Model):
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
         ordering = ['-created_at']
-        managed = False
+        managed = True  # Django gestiona esta tabla
 
     def __str__(self):
         return self.name
@@ -133,7 +132,7 @@ class Order(models.Model):
         verbose_name = "Orden"
         verbose_name_plural = "Órdenes"
         ordering = ['-created_at']
-        managed = False
+        managed = True  # Django gestiona esta tabla
 
     def __str__(self):
         return f"Orden #{self.id}"
@@ -150,7 +149,7 @@ class OrderItem(models.Model):
         db_table = 'order_items'
         verbose_name = "Item de Orden"
         verbose_name_plural = "Items de Orden"
-        managed = False
+        managed = True  # Django gestiona esta tabla
 
     def __str__(self):
         return f"{self.product_name} x {self.quantity}"

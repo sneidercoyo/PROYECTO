@@ -1,4 +1,3 @@
-# views.py completo
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
@@ -50,6 +49,30 @@ def unique_slug(model, base_slug):
         slug = f"{base_slug}-{counter}"
         counter += 1
     return slug
+
+
+def authenticate_user(identifier, password):
+    """
+    Busca usuario por email O por name.
+    Retorna el usuario si la contraseña coincide, None si no.
+    """
+    user = None
+    # Primero intentar por email
+    try:
+        user = User.objects.get(email=identifier, active=True)
+    except User.DoesNotExist:
+        pass
+
+    # Si no, intentar por name (para usuarios como ESNEIDER sin email)
+    if not user:
+        try:
+            user = User.objects.get(name=identifier, active=True)
+        except User.DoesNotExist:
+            pass
+
+    if user and user.check_password(password):
+        return user
+    return None
 
 
 # ============================================================
@@ -134,27 +157,25 @@ def contact(request):
 
 
 # ============================================================
-# AUTH
+# AUTH — CORREGIDO: acepta email O name
 # ============================================================
 
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        identifier = request.POST.get('email')  # El campo sigue llamandose 'email' en el form
         password = request.POST.get('password')
-        try:
-            user = User.objects.get(email=email, active=True)
-            if user.check_password(password):
-                request.session['user_id'] = user.id
-                request.session['user_name'] = user.name
-                request.session['user_role'] = user.role
-                messages.success(request, f"Bienvenido, {user.name}!")
-                return redirect('home')
-            else:
-                messages.error(request, "Contraseña incorrecta.")
-        except User.DoesNotExist:
-            messages.error(request, "Usuario no encontrado.")
-        except Exception as e:
-            messages.error(request, f"Error: {str(e)}")
+
+        user = authenticate_user(identifier, password)
+
+        if user:
+            request.session['user_id'] = user.id
+            request.session['user_name'] = user.name
+            request.session['user_role'] = user.role
+            messages.success(request, f"Bienvenido, {user.name}!")
+            return redirect('home')
+        else:
+            messages.error(request, "Usuario o contraseña incorrectos.")
+
     return render(request, 'store/login.html')
 
 
@@ -167,8 +188,8 @@ def register(request):
         address = request.POST.get('address')
         city = request.POST.get('city')
 
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "El correo ya está registrado.")
+        if email and User.objects.filter(email=email).exists():
+            messages.error(request, "El correo ya esta registrado.")
             return redirect('register')
 
         user = User.objects.create(
@@ -187,7 +208,7 @@ def register(request):
 
 def logout_view(request):
     request.session.flush()
-    messages.success(request, "Sesión cerrada exitosamente.")
+    messages.success(request, "Sesion cerrada exitosamente.")
     return redirect('home')
 
 
@@ -216,7 +237,7 @@ def cart(request):
 def add_to_cart(request, product_id):
     user_id = request.session.get('user_id')
     if not user_id:
-        messages.error(request, "Debes iniciar sesión para agregar al carrito.")
+        messages.error(request, "Debes iniciar sesion para agregar al carrito.")
         return redirect('login')
     product = get_object_or_404(Product, id=product_id, active=True)
     quantity = int(request.POST.get('quantity', 1))
@@ -264,7 +285,7 @@ def checkout(request):
         return redirect('login')
     items = CartItem.objects.filter(user_id=user_id).select_related('product')
     if not items:
-        messages.warning(request, "Tu carrito está vacío.")
+        messages.warning(request, "Tu carrito esta vacio.")
         return redirect('cart')
     total = sum(item.subtotal() for item in items)
     user = get_object_or_404(User, id=user_id)
@@ -644,7 +665,6 @@ def artisan_dashboard(request):
 
     artisan_id = request.session.get('artisan_id')
     if not artisan_id:
-        # Buscar artesano con slug similar al nombre del usuario
         artisan = Artisan.objects.filter(name__icontains=user.name.split()[0]).first()
         if not artisan:
             messages.error(request, "No tienes un perfil de artesano asignado.")
@@ -655,7 +675,6 @@ def artisan_dashboard(request):
     products = Product.objects.filter(artisan_id=artisan_id).order_by('-created_at')
     total_products = products.count()
 
-    # Pedidos que contienen productos de este artesano
     order_ids = OrderItem.objects.filter(
         product__artisan_id=artisan_id
     ).values_list('order_id', flat=True).distinct()

@@ -1,4 +1,3 @@
-# urls.py completo
 from django.urls import path
 from . import views
 
