@@ -59,13 +59,14 @@
                     <div class="product-card-exact">
                         <span class="product-number-badge">{{ forloop.counter }}</span>
                         <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                        <a href="{% url 'product_detail' product.slug %}">
                         <div class="product-img-wrap">
                             {% if product.image %}
                             <img src="{{ product.image.url }}" alt="{{ product.name }}">
                             {% else %}
                             <div class="product-img-placeholder"><i class="bi bi-image"></i></div>
                             {% endif %}
-                        </div>
+                        </div></a>
                         <div class="product-info">
                             <h3 class="product-name">{{ product.name }}</h3>
                             <p class="product-artisan">
