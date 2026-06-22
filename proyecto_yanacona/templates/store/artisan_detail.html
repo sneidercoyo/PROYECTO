@@ -29,7 +29,7 @@
             </div>
             <div class="col-lg-8">
                 <span style="display:inline-block; background:linear-gradient(90deg, var(--color-rainbow-3), var(--color-rainbow-4)); color:white; padding:0.3rem 1rem; border-radius:50px; font-size:0.75rem; font-weight:700; margin-bottom:1rem;">{{ artisan.specialty }}</span>
-                <h1 style="font-family:'Playfair Display', serif; font-size:2rem; font-weight:700; color:var(--color-text); margin-bottom:1rem;">{{ artisan.name }}</h1>
+                <h1 style="font-family:'Playfair Display', serf; font-size:2rem; font-weight:700; color:var(--color-text); margin-bottom:1rem;">{{ artisan.name }}</h1>
                 <p style="color:var(--color-text-light); line-height:1.8; font-size:1rem;">{{ artisan.bio }}</p>
             </div>
         </div>
@@ -42,6 +42,9 @@
             <div class="product-card-exact">
                 <span class="product-number-badge">{{ forloop.counter }}</span>
                 <button class="product-wishlist"><i class="bi bi-heart"></i></button>
+                {% if product.slug %}
+                <a href="{% url 'product_detail' product.slug %}">
+                {% endif %}
                 <div class="product-img-wrap">
                     {% if product.image %}
                     <img src="{{ product.image.url }}" alt="{{ product.name }}">
@@ -49,6 +52,7 @@
                     <div class="product-img-placeholder"><i class="bi bi-image"></i></div>
                     {% endif %}
                 </div>
+                {% if product.slug %}</a>{% endif %}
                 <div class="product-info">
                     <h3 class="product-name">{{ product.name }}</h3>
                     <p class="product-price">{{ product.price|format_price }} COP</p>
