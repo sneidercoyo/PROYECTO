@@ -1,6 +1,6 @@
+# models.py completo
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password as django_check_password
-
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nombre")
@@ -17,7 +17,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Artisan(models.Model):
     name = models.CharField(max_length=150, verbose_name="Nombre")
@@ -37,7 +36,6 @@ class Artisan(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Product(models.Model):
     name = models.CharField(max_length=200, verbose_name="Nombre")
@@ -66,10 +64,10 @@ class Product(models.Model):
     def formatted_price(self):
         return f"${self.price:,.0f}"
 
-
 class User(models.Model):
     ROLE_CHOICES = [
         ('customer', 'Cliente'),
+        ('artisan', 'Artesano'),
         ('admin', 'Administrador'),
     ]
     name = models.CharField(max_length=150, verbose_name="Nombre")
@@ -108,6 +106,8 @@ class User(models.Model):
     def is_admin(self):
         return self.role == 'admin'
 
+    def is_artisan(self):
+        return self.role == 'artisan'
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -138,7 +138,6 @@ class Order(models.Model):
     def __str__(self):
         return f"Orden #{self.id}"
 
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Orden")
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Producto")
@@ -156,7 +155,6 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.product_name} x {self.quantity}"
 
-
 class Contact(models.Model):
     name = models.CharField(max_length=150, verbose_name="Nombre")
     email = models.EmailField(max_length=150, verbose_name="Correo")
@@ -170,11 +168,10 @@ class Contact(models.Model):
         verbose_name = "Mensaje de Contacto"
         verbose_name_plural = "Mensajes de Contacto"
         ordering = ['-created_at']
-        managed = True  # <-- CAMBIO: Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return f"Mensaje de {self.name}"
-
 
 class CartItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Usuario")
@@ -189,7 +186,7 @@ class CartItem(models.Model):
         verbose_name_plural = "Items de Carrito"
         unique_together = ('user', 'product')
         ordering = ['-created_at']
-        managed = True  # <-- CAMBIO: Django gestiona esta tabla
+        managed = True
 
     def __str__(self):
         return f"{self.product.name} x {self.quantity}"
