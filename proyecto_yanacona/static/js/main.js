@@ -62,4 +62,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // ========== USER DROPDOWN ==========
+    const userDropdownToggle = document.querySelector('.user-dropdown-toggle');
+    const userDropdownMenu = document.querySelector('.dropdown-menu-user');
+
+    if (userDropdownToggle && userDropdownMenu) {
+        userDropdownToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isOpen = userDropdownMenu.style.display === 'block';
+            // Cerrar todos los dropdowns
+            document.querySelectorAll('.dropdown-menu-user').forEach(d => d.style.display = 'none');
+            if (!isOpen) {
+                userDropdownMenu.style.display = 'block';
+            }
+        });
+
+        // Cerrar al hacer click fuera
+        document.addEventListener('click', function(e) {
+            if (!userDropdownToggle.contains(e.target) && !userDropdownMenu.contains(e.target)) {
+                userDropdownMenu.style.display = 'none';
+            }
+        });
+    }
 });
