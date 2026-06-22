@@ -1,43 +1,20 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load custom_filters %}
-{% block title %}Mis Pedidos — Panel Artesano{% endblock %}
-{% block content %}
-<section class="page-header-exact">
-    <div class="container-exact">
-        <h1 class="page-title-exact"><i class="bi bi-bag"></i> Mis Pedidos</h1>
-        <p class="page-subtitle-exact">Órdenes que contienen tus productos</p>
-    </div>
-</section>
-<section class="section-padding">
-    <div class="section-inner">
-        <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
-            {% if orders %}
-            <div class="table-responsive">
-                <table class="table-exact">
-                    <thead><tr><th># Orden</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
-                    <tbody>
-                        {% for order in orders %}
-                        <tr>
-                            <td><strong>#{{ order.id }}</strong></td>
-                            <td>{{ order.shipping_name|default:"Anónimo" }}</td>
-                            <td>{{ order.created_at|date:"d/m/Y H:i" }}</td>
-                            <td>{{ order.total|format_price }}</td>
-                            <td><span class="badge" style="background:{% if order.status == 'delivered' %}#28a745{% elif order.status == 'pending' %}#ffc107{% elif order.status == 'cancelled' %}#dc3545{% else %}#17a2b8{% endif %}; color:{% if order.status == 'pending' %}#333{% else %}white{% endif %}; padding:0.3rem 0.6rem; border-radius:12px; font-size:0.75rem;">{{ order.get_status_display }}</span></td>
-                            <td><a href="{% url 'artisan_order_detail' order.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-eye"></i> Ver</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <div class="text-center py-5">
-                <i class="bi bi-bag-x" style="font-size:3rem; color:var(--color-text-light);"></i>
-                <p style="color:var(--color-text-light); margin-top:1rem;">Aún no tienes pedidos con tus productos.</p>
-                <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Producto</a>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</section>
-{% endblock %}
+{% extends 'base.html' %}{% load static %}{% block title %}Mis Pedidos — Artesano{% endblock %}
+{% block content %}<div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+<h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-bag"></i> Mis Pedidos</h1>
+<p style="color:#8a7a6b;margin-bottom:1.5rem;">Pedidos que contienen tus productos</p>
+<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-speedometer2"></i> Dashboard</a>
+<a href="{% url 'artisan_products' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-box-seam"></i> Mis Productos</a>
+<a href="{% url 'artisan_orders' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-bag"></i> Pedidos</a>
+<a href="{% url 'artisan_stock' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-boxes"></i> Inventario</a>
+<a href="{% url 'artisan_stats' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-graph-up"></i> Estadísticas</a></div>
+{% if orders %}<table style="width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-collapse:collapse;">
+<thead><tr style="background:#2c1810;color:#fff;"><th style="padding:1rem;text-align:left;font-size:0.85rem;">Orden #</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Cliente</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Fecha</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Total</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Estado</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Acción</th></tr></thead>
+<tbody>{% for order in orders %}<tr style="border-bottom:1px solid #e8ddd4;">
+<td style="padding:1rem;font-weight:600;">#{{ order.id }}</td>
+<td style="padding:1rem;">{{ order.shipping_name|default:"Sin nombre" }}</td>
+<td style="padding:1rem;">{{ order.created_at|date:"d/m/Y H:i" }}</td>
+<td style="padding:1rem;font-weight:600;">${{ order.total|floatformat:0 }}</td>
+<td style="padding:1rem;">{% if order.status == 'pending' %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#fff3cd;color:#856404;">Pendiente</span>{% elif order.status == 'processing' %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#d1ecf1;color:#0c5460;">En proceso</span>{% elif order.status == 'shipped' %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#d4edda;color:#155724;">Enviado</span>{% elif order.status == 'delivered' %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#d4edda;color:#155724;">Entregado</span>{% else %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#f8d7da;color:#721c24;">Cancelado</span>{% endif %}</td>
+<td style="padding:1rem;"><a href="{% url 'artisan_order_detail' order.id %}" style="padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;text-decoration:none;background:#e8ddd4;color:#2c1810;"><i class="bi bi-eye"></i> Ver</a></td></tr>{% endfor %}</tbody></table>
+{% else %}<div style="text-align:center;padding:3rem;color:#8a7a6b;"><i class="bi bi-bag" style="font-size:3rem;display:block;margin-bottom:1rem;"></i><p>Aún no tienes pedidos.</p></div>{% endif %}</div>{% endblock %}

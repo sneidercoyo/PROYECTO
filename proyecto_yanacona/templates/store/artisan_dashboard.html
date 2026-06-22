@@ -1,85 +1,32 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}Panel Artesano — O'NEL Artesanías{% endblock %}
-{% block content %}
-<section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-2), var(--color-rainbow-3));">
-    <div class="container-exact">
-        <h1 class="page-title-exact" style="color:white;"><i class="bi bi-shop"></i> Panel de Artesano</h1>
-        <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Gestiona tus productos y pedidos</p>
-    </div>
-</section>
-<section class="section-padding">
-    <div class="section-inner">
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
-                    <i class="bi bi-box-seam" style="font-size:2rem; color:var(--color-rainbow-2);"></i>
-                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_products }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem;">Mis Productos</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
-                    <i class="bi bi-bag-check" style="font-size:2rem; color:var(--color-rainbow-4);"></i>
-                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ total_orders }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem;">Mis Pedidos</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:1.5rem; text-align:center; box-shadow:var(--shadow-soft);">
-                    <i class="bi bi-hourglass-split" style="font-size:2rem; color:var(--color-rainbow-1);"></i>
-                    <h3 style="font-family:'Playfair Display', serif; font-weight:700; margin:0.5rem 0;">{{ pending_orders }}</h3>
-                    <p style="color:var(--color-text-light); font-size:0.9rem;">Pendientes</p>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-4">
-            <div class="col-12">
-                <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                    <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
-                    <a href="{% url 'artisan_products' %}" class="btn-outline-exact"><i class="bi bi-box-seam"></i> Ver Mis Productos</a>
-                    <a href="{% url 'artisan_orders' %}" class="btn-outline-exact"><i class="bi bi-bag"></i> Ver Mis Pedidos</a>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div style="background:var(--color-white); border-radius:var(--radius-lg); border:1px solid var(--color-border); padding:2rem; box-shadow:var(--shadow-soft);">
-                    <h4 style="font-family:'Playfair Display', serif; font-weight:700; margin-bottom:1.5rem;"><i class="bi bi-box-seam"></i> Mis Productos Recientes</h4>
-                    {% if products %}
-                    <div class="table-responsive">
-                        <table class="table-exact">
-                            <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Destacado</th><th>Acciones</th></tr></thead>
-                            <tbody>
-                                {% for product in products|slice:":5" %}
-                                <tr>
-                                    <td>
-                                        <div style="display:flex; align-items:center; gap:0.75rem;">
-                                            {% if product.image %}<img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:40px; height:40px; object-fit:cover; border-radius:var(--radius-sm);">
-                                            {% else %}<div style="width:40px; height:40px; background:var(--color-cream); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center;"><i class="bi bi-image" style="color:var(--color-text-light);"></i></div>{% endif %}
-                                            <span>{{ product.name }}</span>
-                                        </div>
-                                    </td>
-                                    <td>${{ product.price }}</td>
-                                    <td>{{ product.stock }}</td>
-                                    <td><span class="badge" style="background:{% if product.active %}#28a745{% else %}#dc3545{% endif %}; color:white; padding:0.2rem 0.5rem; border-radius:10px; font-size:0.7rem;">{% if product.active %}Activo{% else %}Inactivo{% endif %}</span></td>
-                                    <td>{% if product.featured %}<i class="bi bi-star-fill" style="color:var(--color-rainbow-1);"></i>{% else %}<i class="bi bi-star" style="color:var(--color-text-light);"></i>{% endif %}</td>
-                                    <td><a href="{% url 'artisan_edit_product' product.id %}" class="btn-sm" style="color:var(--color-rainbow-4);"><i class="bi bi-pencil"></i></a></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-4">
-                        <i class="bi bi-box-seam" style="font-size:2rem; color:var(--color-text-light);"></i>
-                        <p style="color:var(--color-text-light); margin-top:0.5rem;">No tienes productos aún.</p>
-                        <a href="{% url 'artisan_add_product' %}" class="btn-primary-exact mt-2">Crear Primer Producto</a>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock %}
+{% extends 'base.html' %}{% load static %}{% block title %}Panel Artesano — O'NEL{% endblock %}
+{% block content %}<div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+<div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:2px solid #e8ddd4;">
+{% if artisan.image %}<img src="{{ artisan.image.url }}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #c75c2e;">
+{% else %}<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#c75c2e,#e8a87c);display:flex;align-items:center;justify-content:center;color:#fff;font-size:2rem;font-weight:700;">{{ artisan.name|first }}</div>{% endif %}
+<div><h1 style="margin:0;color:#2c1810;font-size:1.8rem;">{{ artisan.name }}</h1>
+<p style="margin:0.3rem 0 0;color:#8a7a6b;font-size:0.95rem;">{{ artisan.specialty|default:"Artesano" }} | {{ user.city|default:"Puerto Caicedo" }}</p></div></div>
+<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-speedometer2"></i> Dashboard</a>
+<a href="{% url 'artisan_products' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-box-seam"></i> Mis Productos</a>
+<a href="{% url 'artisan_add_product' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-plus-lg"></i> Nuevo Producto</a>
+<a href="{% url 'artisan_orders' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-bag"></i> Pedidos</a>
+<a href="{% url 'artisan_stock' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-boxes"></i> Inventario</a>
+<a href="{% url 'artisan_stats' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-graph-up"></i> Estadísticas</a>
+<a href="{% url 'artisan_profile' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-person"></i> Mi Perfil</a></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;margin-bottom:2.5rem;">
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-box-seam" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ total_products }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Productos</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-check-circle" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ active_products }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Activos</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-tag" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ on_sale }}</div><div style="font-size:0.85rem;color:#8a7a6b;">En Descuento</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-exclamation-triangle" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ out_of_stock }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Agotados</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-bag" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ total_orders }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Pedidos</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-cash-stack" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">${{ total_revenue|floatformat:0 }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Ingresos</div></div></div>
+<h2 style="font-size:1.3rem;margin-bottom:1.2rem;color:#2c1810;"><i class="bi bi-clock-history"></i> Productos Recientes</h2>
+{% if recent_products %}<table style="width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-collapse:collapse;">
+<thead><tr style="background:#2c1810;color:#fff;"><th style="padding:1rem;text-align:left;font-size:0.85rem;">Producto</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Precio</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Stock</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Estado</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Acciones</th></tr></thead>
+<tbody>{% for p in recent_products %}<tr style="border-bottom:1px solid #e8ddd4;">
+<td style="padding:1rem;"><strong>{{ p.name }}</strong>{% if p.is_on_sale %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#fff3cd;color:#856404;">-{{ p.discount_percent }}%</span>{% endif %}</td>
+<td style="padding:1rem;">{% if p.is_on_sale %}<span style="text-decoration:line-through;color:#999;font-size:0.85rem;">${{ p.price|floatformat:0 }}</span> <span style="color:#c75c2e;font-weight:700;">${{ p.sale_price|floatformat:0 }}</span>{% else %}${{ p.price|floatformat:0 }}{% endif %}</td>
+<td style="padding:1rem;">{{ p.stock }}</td>
+<td style="padding:1rem;">{% if p.active %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#d4edda;color:#155724;">Activo</span>{% else %}<span style="display:inline-block;padding:0.25rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;background:#f8d7da;color:#721c24;">Inactivo</span>{% endif %}</td>
+<td style="padding:1rem;"><a href="{% url 'artisan_edit_product' p.id %}" style="padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;text-decoration:none;background:#e8ddd4;color:#2c1810;"><i class="bi bi-pencil"></i></a> <a href="{% url 'artisan_toggle_product' p.id %}" style="padding:0.4rem 0.8rem;border-radius:6px;font-size:0.8rem;text-decoration:none;background:#d4edda;color:#155724;"><i class="bi bi-power"></i></a></td></tr>{% endfor %}</tbody></table>
+{% else %}<div style="text-align:center;padding:3rem;color:#8a7a6b;"><i class="bi bi-box" style="font-size:3rem;display:block;margin-bottom:1rem;"></i><p>No tienes productos aún.</p><a href="{% url 'artisan_add_product' %}" style="background:#c75c2e;color:#fff;padding:0.8rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:0.5rem;"><i class="bi bi-plus-lg"></i> Crear primer producto</a></div>{% endif %}</div>{% endblock %}

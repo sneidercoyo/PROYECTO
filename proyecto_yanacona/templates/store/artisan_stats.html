@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% load static %}{% block title %}Estadísticas — Artesano{% endblock %}
+{% block content %}<div style="max-width:1200px;margin:0 auto;padding:2rem 1rem;">
+<h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-graph-up"></i> Estadísticas</h1>
+<p style="color:#8a7a6b;margin-bottom:1.5rem;">Rendimiento de tus productos</p>
+<div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+<a href="{% url 'artisan_dashboard' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-speedometer2"></i> Dashboard</a>
+<a href="{% url 'artisan_products' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-box-seam"></i> Mis Productos</a>
+<a href="{% url 'artisan_stock' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#fff;color:#2c1810;border:1px solid #e8ddd4;"><i class="bi bi-boxes"></i> Inventario</a>
+<a href="{% url 'artisan_stats' %}" style="padding:0.7rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.9rem;background:#c75c2e;color:#fff;"><i class="bi bi-graph-up"></i> Estadísticas</a></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.2rem;margin-bottom:2.5rem;">
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-cash-stack" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">${{ total_revenue|floatformat:0 }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Ingresos Totales</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-bag" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ total_orders }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Total Pedidos</div></div>
+<div style="background:#fff;border-radius:12px;padding:1.5rem;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #e8ddd4;"><i class="bi bi-box" style="font-size:2rem;color:#c75c2e;display:block;margin-bottom:0.5rem;"></i><div style="font-size:2rem;font-weight:700;color:#2c1810;">{{ total_sold }}</div><div style="font-size:0.85rem;color:#8a7a6b;">Unidades Vendidas</div></div></div>
+<h3 style="color:#2c1810;margin-bottom:1rem;"><i class="bi bi-trophy"></i> Productos Más Vendidos</h3>
+{% if top_products %}<table style="width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-collapse:collapse;margin-bottom:2rem;">
+<thead><tr style="background:#2c1810;color:#fff;"><th style="padding:1rem;text-align:left;font-size:0.85rem;">Producto</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Unidades Vendidas</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Ingresos</th></tr></thead>
+<tbody>{% for p in top_products %}<tr style="border-bottom:1px solid #e8ddd4;"><td style="padding:1rem;font-weight:600;">{{ p.product__name }}</td><td style="padding:1rem;">{{ p.total_sold }}</td><td style="padding:1rem;font-weight:600;">${{ p.total_revenue|floatformat:0 }}</td></tr>{% endfor %}</tbody></table>
+{% else %}<div style="text-align:center;padding:2rem;color:#8a7a6b;"><p>Aún no hay ventas registradas.</p></div>{% endif %}
+<h3 style="color:#2c1810;margin-bottom:1rem;"><i class="bi bi-calendar"></i> Ventas por Mes</h3>
+{% if sales_by_month %}<table style="width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);border-collapse:collapse;">
+<thead><tr style="background:#2c1810;color:#fff;"><th style="padding:1rem;text-align:left;font-size:0.85rem;">Mes</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Ventas</th><th style="padding:1rem;text-align:left;font-size:0.85rem;">Ingresos</th></tr></thead>
+<tbody>{% for s in sales_by_month %}<tr style="border-bottom:1px solid #e8ddd4;"><td style="padding:1rem;">{{ s.month|date:"F Y" }}</td><td style="padding:1rem;">{{ s.count }}</td><td style="padding:1rem;font-weight:600;">${{ s.total|floatformat:0 }}</td></tr>{% endfor %}</tbody></table>
+{% else %}<div style="text-align:center;padding:2rem;color:#8a7a6b;"><p>No hay datos de ventas por mes.</p></div>{% endif %}</div>{% endblock %}

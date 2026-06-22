@@ -170,18 +170,21 @@ def login_view(request):
     if request.method == 'POST':
         identifier = request.POST.get('email')
         password = request.POST.get('password')
-
         user = authenticate_user(identifier, password)
-
         if user:
             request.session['user_id'] = user.id
             request.session['user_name'] = user.name
             request.session['user_role'] = user.role
             messages.success(request, f"Bienvenido, {user.name}!")
-            return redirect('home')
+            # REDIRIGIR SEGÚN ROL
+            if user.is_admin():
+                return redirect('admin_dashboard')
+            elif user.is_artisan():
+                return redirect('artisan_dashboard')
+            else:
+                return redirect('home')
         else:
             messages.error(request, "Usuario o contraseña incorrectos.")
-
     return render(request, 'store/login.html')
 
 
