@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-{% block title %}Pedido #{{ order.id }} — Panel Admin{% endblock %}
+{% block title %}Pedido #{{ order.id }} — Panel Admin<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_orders' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Pedidos</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact"><i class="bi bi-bag"></i> Pedido #{{ order.id }}</h1>
         <p class="page-subtitle-exact">Gestión completa de la orden</p>
     </div>
@@ -87,4 +89,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_orders' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Pedidos</a>
+        </div>
 {% endblock %}

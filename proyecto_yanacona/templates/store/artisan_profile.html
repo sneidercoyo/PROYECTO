@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mi Perfil — Panel Artesano{% endblock %}
+{% block title %}Mi Perfil — Panel Artesano<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-3), var(--color-rainbow-4));">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact" style="color:white;"><i class="bi bi-person-circle"></i> Mi Perfil</h1>
         <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Información de tu cuenta y perfil de artesano</p>
     </div>
@@ -59,4 +61,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
+        </div>
 {% endblock %}

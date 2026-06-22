@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Editar Producto — Panel Admin{% endblock %}
+{% block title %}Editar Producto — Panel Admin<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_products' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Productos</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact"><i class="bi bi-pencil"></i> Editar Producto</h1>
         <p class="page-subtitle-exact">{{ product.name }}</p>
     </div>
@@ -71,4 +73,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_products' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Productos</a>
+        </div>
 {% endblock %}

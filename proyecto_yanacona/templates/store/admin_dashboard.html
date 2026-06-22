@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-{% block title %}Panel Administrador — O'NEL Artesanías{% endblock %}
+{% block title %}Panel Administrador — O'NEL Artesanías<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'home' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Ir a la Tienda</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-4), var(--color-rainbow-5));">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact" style="color:white;"><i class="bi bi-speedometer2"></i> Panel de Administrador</h1>
         <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Gestión completa de la tienda O'NEL</p>
     </div>
@@ -112,4 +114,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'home' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Ir a la Tienda</a>
+        </div>
 {% endblock %}

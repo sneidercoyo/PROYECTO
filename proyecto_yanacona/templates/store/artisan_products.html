@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mis Productos — Panel Artesano{% endblock %}
+{% block title %}Mis Productos — Panel Artesano<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact"><i class="bi bi-box-seam"></i> Mis Productos</h1>
         <p class="page-subtitle-exact">Gestiona todos tus productos, precios, descuentos e inventario</p>
     </div>
@@ -66,4 +68,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_dashboard' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar al Panel</a>
+        </div>
 {% endblock %}

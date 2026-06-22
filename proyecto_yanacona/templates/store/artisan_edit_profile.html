@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Editar Perfil — Panel Artesano{% endblock %}
+{% block title %}Editar Perfil — Panel Artesano<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_profile' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Mi Perfil</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact" style="background:linear-gradient(135deg, var(--color-rainbow-3), var(--color-rainbow-4));">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact" style="color:white;"><i class="bi bi-pencil-square"></i> Editar Perfil</h1>
         <p class="page-subtitle-exact" style="color:rgba(255,255,255,0.9);">Actualiza tu información personal y de artesano</p>
     </div>
@@ -68,4 +70,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_profile' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Mi Perfil</a>
+        </div>
 {% endblock %}

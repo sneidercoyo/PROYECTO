@@ -27,6 +27,14 @@
         .dropdown-menu-user.show {
             display: block !important;
         }
+        .dropdown-menu-user a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: #2c1810;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
         .dropdown-menu-user a:hover {
             background: #f8f5f2;
         }
@@ -34,7 +42,6 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="header-inner">
             <a href="{% url 'home' %}" class="logo-area">
@@ -98,10 +105,8 @@
         </div>
     </header>
 
-    <!-- Rainbow Divider -->
     <div class="rainbow-divider"></div>
 
-    <!-- Messages -->
     {% if messages %}
     <div class="container-exact" style="padding-top:1rem;">
         {% for message in messages %}
@@ -114,7 +119,6 @@
 
     {% block content %}{% endblock %}
 
-    <!-- Footer Content -->
     <div class="footer-content-exact">
         <div class="footer-inner-exact">
             <div class="footer-col-exact">
@@ -158,23 +162,20 @@
         </div>
     </div>
 
-    <!-- Rainbow Footer Bar -->
     <div class="site-footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Dropdown de usuario funcional
         document.addEventListener('DOMContentLoaded', function() {
             const userDropdownBtn = document.getElementById('userDropdownBtn');
             const userDropdownMenu = document.getElementById('userDropdownMenu');
-            
+
             if (userDropdownBtn && userDropdownMenu) {
                 userDropdownBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     userDropdownMenu.classList.toggle('show');
                 });
-                
-                // Cerrar al hacer clic fuera
+
                 document.addEventListener('click', function(e) {
                     if (!userDropdownBtn.contains(e.target) && !userDropdownMenu.contains(e.target)) {
                         userDropdownMenu.classList.remove('show');

@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mensaje — Panel Admin{% endblock %}
+{% block title %}Mensaje — Panel Admin<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_contacts' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Contactos</a>
+        </div>{% endblock %}
 {% block content %}
 <section class="page-header-exact">
-    <div class="container-exact">
+    <div class="container-exact" style="text-align:center;">
         <h1 class="page-title-exact"><i class="bi bi-envelope"></i> Mensaje de Contacto</h1>
         <p class="page-subtitle-exact">De: {{ contact.name }}</p>
     </div>
@@ -30,4 +32,7 @@
         </div>
     </div>
 </section>
+<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'admin_contacts' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Contactos</a>
+        </div>
 {% endblock %}

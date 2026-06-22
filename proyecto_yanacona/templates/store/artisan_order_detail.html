@@ -1,4 +1,6 @@
-{% extends 'base.html' %}{% load static %}{% block title %}Detalle Pedido #{{ order.id }} — Artesano{% endblock %}
+{% extends 'base.html' %}{% load static %}{% block title %}Detalle Pedido #{{ order.id }} — Artesano<div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_orders' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Pedidos</a>
+        </div>{% endblock %}
 {% block content %}<div style="max-width:800px;margin:0 auto;padding:2rem 1rem;">
 <h1 style="font-size:1.8rem;color:#2c1810;margin-bottom:0.5rem;"><i class="bi bi-bag"></i> Pedido #{{ order.id }}</h1>
 <p style="color:#8a7a6b;margin-bottom:1.5rem;">{{ order.created_at|date:"d/m/Y H:i" }}</p>
@@ -30,4 +32,6 @@
 <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Enviado</option>
 <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Entregado</option>
 <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelado</option></select>
-<button type="submit" style="padding:0.7rem 1.5rem;background:#c75c2e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;"><i class="bi bi-check-lg"></i> Actualizar</button></form></div></div>{% endblock %}
+<button type="submit" style="padding:0.7rem 1.5rem;background:#c75c2e;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;"><i class="bi bi-check-lg"></i> Actualizar</button></form></div></div><div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+            <a href="{% url 'artisan_orders' %}" class="btn-outline-exact"><i class="bi bi-arrow-left"></i> Regresar a Pedidos</a>
+        </div>{% endblock %}
